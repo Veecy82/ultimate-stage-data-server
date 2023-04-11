@@ -1,0 +1,2 @@
+completed, double-elim, no stage data: tournament/we-tech-those-15-georgia-tech/event/ultimate-singles
+completed, double-elim/gauntlet, stage data: tournament/smash-ultimate-summit-6/event/ultimate-singles
