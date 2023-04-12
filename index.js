@@ -1,12 +1,14 @@
 require('dotenv').config()
 
 const apiTools = require('./utility/apiTools')
+const util = require('./utility/util')
 
 async function main() {
-  const slug = 'tournament/magical-outlaws-61/event/ultimate-singles-weekly-42'
+  const period = util.portionDateRange(2019, 1, 1, 2019, 1, 7)[0]
 
-  console.log(`The event ${slug} has losers finals stage data:`)
-  console.log(await apiTools.eventSlugRepresentativeHasStageData(slug))
+  console.log(
+    await apiTools.findValidEventSlugsInSinglePeriod(period[0], period[1])
+  )
 }
 
 main()
