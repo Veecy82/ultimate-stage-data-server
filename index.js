@@ -4,11 +4,14 @@ const apiTools = require('./utility/apiTools')
 const util = require('./utility/util')
 
 async function main() {
-  const period = util.portionDateRange(2019, 1, 1, 2019, 1, 7)[0]
+  const period = util.portionDateRange(2019, 4, 5, 2019, 4, 7)[0]
 
-  console.log(
-    await apiTools.findValidEventSlugsInSinglePeriod(period[0], period[1])
+  const slugs = await apiTools.getCompletedEventSlugsWithEntrantsInSinglePeriod(
+    period[0],
+    period[1]
   )
+
+  console.log(slugs.size)
 }
 
 main()

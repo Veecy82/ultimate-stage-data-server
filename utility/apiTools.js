@@ -18,9 +18,10 @@ exports.stallPromise = async (prom, n) => {
 /** Asynchronously make a request to Start.gg's GraphQL API
  * @param {string} query - The GraphQL query
  * @param {Object} variables - An object whose key: value pairs give the variables for the query
+ * @param {string} logMessage - An optional log message passed to `console.log` when making the query
  */
-exports.makeGraphQLRequest = async (query, variables) => {
-  console.log('Sending request...')
+exports.makeGraphQLRequest = async (query, variables, logMessage) => {
+  console.log(`Sending request... ${logMessage || ''}`)
   try {
     const res = await axios.post(
       'https://api.start.gg/gql/alpha',
@@ -34,24 +35,94 @@ exports.makeGraphQLRequest = async (query, variables) => {
     )
     return res.data.data
   } catch (e) {
-    console.log('Error making GraphQL request:')
-    console.log(e)
     console.log('Error making GraphQL request')
+    if (e.response) {
+      console.log('Although a connection with Start.gg was made:')
+      if (e.response.data) {
+        console.log(e.response.data)
+      }
+    } else {
+      console.log('Failed to connect to Start.gg API')
+    }
+    throw e
   }
 }
 
-/** Asynchronously return a boolean representing whether a representative set of the given event has stage data
+/** A wrapper for `makeGraphQLRequest`
+ *
+ * Asynchronously make a request to Start.gg's GraphQL API, retrying up to `n` total tries in the event of a failed query
+ *
+ * Parameters are the same as for `makeGraphQLRequest`, except
+ * @param {number} n - The maximum number of attempts to make the request
+ * @param {number} delayBetweenQueries - The amount of time between reattempted queries
+ */
+exports.makeGraphQLRequestUpToNTimes = async (
+  query,
+  variables,
+  n,
+  delayBetweenQueries,
+  logMessage
+) => {
+  let err
+  for (let i = 0; i < n; i++) {
+    try {
+      if (i > 0) {
+        console.log('Retrying...')
+      }
+      return await this.stallPromise(
+        this.makeGraphQLRequest(query, variables, logMessage),
+        delayBetweenQueries
+      )
+    } catch (e) {
+      await this.stallPromise(null, delayBetweenQueries)
+      err = e
+    }
+  }
+  console.log(`Failed to make GraphQL request even with ${n} tries`)
+  if (err) {
+    throw err
+  }
+}
+
+/** A specific case of `makeGraphQLRequestUpToNTimes`
+ *
+ * Asynchronously make a request to Start.gg's GraphQL API, retrying up to 5 total tries in the event of a failed query
+ *
+ * @param {string} query - The GraphQL query
+ * @param {Object} variables - An object whose key: value pairs give the variables for the query
+ * @param {number} delayBetweenQueries - The amount of time between reattempted queries
+ * @param {string} logMessage - An optional log message passed to `console.log` when making the query
+ */
+exports.makeGraphQLRequestStubborn = async (
+  query,
+  variables,
+  delayBetweenQueries,
+  logMessage
+) => {
+  return await this.makeGraphQLRequestUpToNTimes(
+    query,
+    variables,
+    5,
+    delayBetweenQueries,
+    logMessage
+  )
+}
+
+/** Asynchronously return a boolean indicating whether a representative set of the given event has stage data
  *
  * Set representatitive is chosen by the `MAGIC` sort type in Start.gg's GraphQL API
  *
  * GraphQL queries made: 1
  */
 exports.eventSlugRepresentativeHasStageData = async (slug) => {
-  const response = await this.makeGraphQLRequest(checkRepresentativeSet.query, {
-    slug,
-  })
+  const response = await this.makeGraphQLRequestStubborn(
+    checkRepresentativeSet.query,
+    {
+      slug,
+    },
+    2
+  )
   try {
-    // console.log(response.event.sets.nodes)
     const stageName = response.event.sets.nodes[0].games[0].stage.name
     const charId =
       response.event.sets.nodes[0].games[0].selections[0].selectionValue
@@ -73,14 +144,16 @@ exports.eventSlugRepresentativeHasStageData = async (slug) => {
  * - `isOnline`
  */
 exports.eventIsValid = (event) => {
-  if (event.state === 'COMPLETED' && event.numEntrants >= 150) {
+  if (event.state === 'COMPLETED' && event.numEntrants >= 48) {
     return true
   }
 }
 
-/** Return list of slugs of events satisfying the condition `this.eventIsValid`
+/** Asynchronously return an array of slugs of events satisfying the condition `this.eventIsValid`
  *
  * Should only be used with "single periods," ie monthlong periods at most to prevent bumping up against Start.GG's API query limits (longer time periods should be chained calls of this function)
+ *
+ * GraphQL queries made: 1-40+
  *
  * Example usage:
  *
@@ -104,42 +177,120 @@ exports.findValidEventSlugsInSinglePeriod = async (unixStart, unixEnd) => {
         }
       }
     } catch (e) {
-      console.log(e)
       console.log('Oops! Error')
     }
   }
 
   let response = await this.stallPromise(
-    this.makeGraphQLRequest(findValidTournamentsInPeriod.query, {
-      perPage: tournamentsPerPage,
-      page: 1,
-      after: unixStart,
-      before: unixEnd,
-    }),
+    this.makeGraphQLRequestStubborn(
+      findValidTournamentsInPeriod.query,
+      {
+        perPage: tournamentsPerPage,
+        page: 1,
+        after: unixStart,
+        before: unixEnd,
+      },
+      delayBetweenQueries,
+      '(1 of ?)'
+    ),
     delayBetweenQueries
   )
   let lastPage
   try {
     lastPage = response.tournaments.pageInfo.totalPages
   } catch (e) {
-    console.log(e)
     console.log("Couldn't find number of pages for some reason")
+    throw e
   }
 
   handleResponse(response)
 
   for (let i = 2; i <= lastPage; i++) {
     response = await this.stallPromise(
-      this.makeGraphQLRequest(findValidTournamentsInPeriod.query, {
-        perPage: tournamentsPerPage,
-        page: i,
-        after: unixStart,
-        before: unixEnd,
-      }),
+      this.makeGraphQLRequestStubborn(
+        findValidTournamentsInPeriod.query,
+        {
+          perPage: tournamentsPerPage,
+          page: i,
+          after: unixStart,
+          before: unixEnd,
+        },
+        delayBetweenQueries,
+        `(${i} of ${lastPage})`
+      ),
       delayBetweenQueries
     )
     handleResponse(response)
   }
 
   return validSlugs
+}
+
+/** Asynchronously return a map of `slug, numEntrants` pairs of events in a single time period */
+exports.getCompletedEventSlugsWithEntrantsInSinglePeriod = async (
+  unixStart,
+  unixEnd
+) => {
+  const slugs = new Map()
+  const tournamentsPerPage = 50
+  // delay in seconds
+  const delayBetweenQueries = 2
+
+  const handleResponse = (res) => {
+    try {
+      for (const tournament of res.tournaments.nodes) {
+        for (const event of tournament.events) {
+          if (event.state === 'COMPLETED') {
+            slugs.set(event.slug, event.numEntrants)
+          }
+        }
+      }
+    } catch (e) {
+      console.log('Oops! Error')
+    }
+  }
+
+  let response = await this.stallPromise(
+    this.makeGraphQLRequestStubborn(
+      findValidTournamentsInPeriod.query,
+      {
+        perPage: tournamentsPerPage,
+        page: 1,
+        after: unixStart,
+        before: unixEnd,
+      },
+      delayBetweenQueries,
+      '(1 of ?)'
+    ),
+    delayBetweenQueries
+  )
+  let lastPage
+  try {
+    lastPage = response.tournaments.pageInfo.totalPages
+  } catch (e) {
+    console.log("Couldn't find number of pages for some reason")
+    throw e
+  }
+
+  handleResponse(response)
+
+  for (let i = 2; i <= lastPage; i++) {
+    response = await this.stallPromise(
+      this.makeGraphQLRequestStubborn(
+        findValidTournamentsInPeriod.query,
+        {
+          perPage: tournamentsPerPage,
+          page: i,
+          after: unixStart,
+          before: unixEnd,
+        },
+        delayBetweenQueries,
+        `(${i} of ${lastPage})`
+      ),
+      delayBetweenQueries
+    )
+    handleResponse(response)
+  }
+
+  return slugs
 }
