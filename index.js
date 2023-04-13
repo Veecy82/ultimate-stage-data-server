@@ -13,16 +13,10 @@ async function main() {
   const allTourneys = await util.getMapFromFiles(filePaths)
   const filteredTourneys = util.filterMapByValue(
     allTourneys,
-    (val) => val > 1000
+    (val) => val > 128
   )
 
   console.log(filteredTourneys)
-
-  console.log(
-    await apiTools.eventSlugRepresentativeHasStageData(
-      'tournament/domics-atomic-arena-4000-pot/event/wifi-singles-with-bans'
-    )
-  )
 }
 
 main()

@@ -4,6 +4,7 @@ const util = require('../utility/util')
 
 const checkRepresentativeSet = require('../queries/checkRepresentativeSet')
 const findValidTournamentsInPeriod = require('../queries/findValidTournamentsInPeriod')
+const getSetDataFromEvent = require('../queries/getSetDataFromEvent')
 
 /** Given a Promise `prom`, return a Promise that resolves to the same value as `prom` after it resolves, or after n seconds, whichever is longer */
 exports.stallPromise = async (prom, n) => {
@@ -151,7 +152,9 @@ exports.eventIsValid = (event) => {
   }
 }
 
-/** Asynchronously return an array of slugs of events satisfying the condition `this.eventIsValid`
+/** DEPRECATED: use `getCompletedEventSlugsWithEntrantsInSinglePeriod` and filter events afterward locally instead of using this function
+ *
+ * Asynchronously return an array of slugs of events satisfying the condition `this.eventIsValid`
  *
  * Should only be used with "single periods," ie monthlong periods at most to prevent bumping up against Start.GG's API query limits (longer time periods should be chained calls of this function)
  *
@@ -248,7 +251,9 @@ exports.getCompletedEventSlugsWithEntrantsInSinglePeriod = async (
         }
       }
     } catch (e) {
-      console.log('Oops! Error')
+      console.log(
+        'Error handling response in getCompletedEventSlugsWithEntrantsInSinglePeriod'
+      )
     }
   }
 
@@ -262,7 +267,7 @@ exports.getCompletedEventSlugsWithEntrantsInSinglePeriod = async (
         before: unixEnd,
       },
       delayBetweenQueries,
-      '(1 of ?)'
+      'Requesting tournament data: (1 of ?)'
     ),
     delayBetweenQueries
   )
@@ -270,7 +275,9 @@ exports.getCompletedEventSlugsWithEntrantsInSinglePeriod = async (
   try {
     lastPage = response.tournaments.pageInfo.totalPages
   } catch (e) {
-    console.log("Couldn't find number of pages for some reason")
+    console.log(
+      "Couldn't find number of pages for some reason when querying tournaments"
+    )
     throw e
   }
 
@@ -287,7 +294,7 @@ exports.getCompletedEventSlugsWithEntrantsInSinglePeriod = async (
           before: unixEnd,
         },
         delayBetweenQueries,
-        `(${i} of ${lastPage})`
+        `Requesting tournament data: (${i} of ${lastPage})`
       ),
       delayBetweenQueries
     )
@@ -342,4 +349,113 @@ exports.getCompletedEventSlugsWithEntrantsInLongPeriod = async (
     }
   }
   return allSlugs
+}
+
+/** Asynchronously return an array of game objects from an event for games that have stage and character data
+ *
+ * Event slug should be previously vetted with `eventSlugRepresentativeHasStageData` as a heuristic for sets to have reported data
+ */
+exports.getGamesFromVettedEvent = async (slug) => {
+  const games = []
+  const setsPerPage = 30
+  const delayBetweenQueries = 3
+
+  const handleResponse = (res) => {
+    try {
+      for (const set of res.event.sets.nodes) {
+        if (set.games) {
+          for (const game of set.games) {
+            if (
+              game.winnerId &&
+              game.stage &&
+              game.stage.name &&
+              game.selections &&
+              game.selections.length === 2 &&
+              game.selections[0].entrant &&
+              game.selections[0].entrant.id &&
+              game.selections[0].selectionValue &&
+              game.selections[1].entrant &&
+              game.selections[1].entrant.id &&
+              game.selections[1].selectionValue
+            ) {
+              const entrant0Won =
+                game.selections[0].entrant.id === game.winnerId
+              const winChar = entrant0Won
+                ? game.selections[0].selectionValue
+                : game.selections[1].selectionValue
+              const loseChar = entrant0Won
+                ? game.selections[1].selectionValue
+                : game.selections[0].selectionValue
+              const winPlayer = entrant0Won
+                ? game.selections[0].entrant.id
+                : game.selections[1].entrant.id
+              const losePlayer = entrant0Won
+                ? game.selections[1].entrant.id
+                : game.selections[0].entrant.id
+              games.push({
+                winChar,
+                loseChar,
+                winPlayer,
+                losePlayer,
+                stage: game.stage.name,
+                isOnline: res.event.isOnline,
+                setId: set.id,
+                slug,
+              })
+            } else {
+              console.log("We're skipping a set!")
+            }
+          }
+        } else {
+          console.log("We're skipping a set")
+        }
+      }
+    } catch (e) {
+      console.log('Error handling response in getGamesFromVettedEvent')
+      throw e
+    }
+  }
+
+  let response = await this.stallPromise(
+    this.makeGraphQLRequestStubborn(
+      getSetDataFromEvent.query,
+      {
+        perPage: setsPerPage,
+        page: 1,
+        slug,
+      },
+      delayBetweenQueries,
+      'Requesting set data: (1 of ?)'
+    ),
+    delayBetweenQueries
+  )
+  let lastPage
+  try {
+    lastPage = response.event.sets.pageInfo.totalPages
+  } catch (e) {
+    console.log(
+      `Couldn't find number of pages for some reason when querying sets from event '${slug}'`
+    )
+    throw e
+  }
+  handleResponse(response)
+
+  for (let i = 2; i <= lastPage; i++) {
+    response = await this.stallPromise(
+      this.makeGraphQLRequestStubborn(
+        getSetDataFromEvent.query,
+        {
+          perPage: setsPerPage,
+          page: i,
+          slug,
+        },
+        delayBetweenQueries,
+        `Requesting set data: (${i} of ${lastPage})`
+      ),
+      delayBetweenQueries
+    )
+    handleResponse(response)
+  }
+
+  return games
 }
