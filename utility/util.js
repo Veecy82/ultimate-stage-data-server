@@ -1,3 +1,5 @@
+const fs = require('fs/promises')
+
 exports.ymdToUnixTimestamp = (year, month, day) => {
   return Math.floor(Date.UTC(year, month - 1, day, 0, 0, 0, 0) / 1000)
 }
@@ -67,4 +69,17 @@ exports.portionDateRange = (
   }
 
   return periods
+}
+
+exports.writeMapToJSON = async (pathToFile, map) => {
+  const obj = {}
+  for (const [key, val] of map) {
+    obj[key] = val
+  }
+  try {
+    fs.writeFile(pathToFile, JSON.stringify(obj))
+  } catch (e) {
+    console.log(`Failed to write map to "${pathToFile}"`)
+    throw e
+  }
 }

@@ -1,5 +1,7 @@
 const axios = require('axios')
 
+const util = require('../utility/util')
+
 const checkRepresentativeSet = require('../queries/check-representative-set')
 const findValidTournamentsInPeriod = require('../queries/find-valid-tournaments-in-period')
 
@@ -234,7 +236,7 @@ exports.getCompletedEventSlugsWithEntrantsInSinglePeriod = async (
   const slugs = new Map()
   const tournamentsPerPage = 50
   // delay in seconds
-  const delayBetweenQueries = 2
+  const delayBetweenQueries = 3
 
   const handleResponse = (res) => {
     try {
@@ -293,4 +295,51 @@ exports.getCompletedEventSlugsWithEntrantsInSinglePeriod = async (
   }
 
   return slugs
+}
+
+/** Asynchronously return a map of `slug, numEntrants` pairs of events in an arbitrary time period
+ *
+ * As implemented, tournaments may be up to 4 days before or 4 days after the given range as a measure to prevent missing tournaments that lie on the boundary of adjacent queries
+ *
+ * e.g. querying
+ *
+ * "June 3rd, 2019 to January 1st, 2020"
+ * and
+ * "January 1st, 2020 to April 9th, 2020"
+ *
+ * would miss a tournament that ran from December 29th, 2019 to January 6th, 2020 if it wasn't implemented this way
+ */
+exports.getCompletedEventSlugsWithEntrantsInLongPeriod = async (
+  yStart,
+  mStart,
+  dStart,
+  yEnd,
+  mEnd,
+  dEnd
+) => {
+  const periods = util.portionDateRange(
+    yStart,
+    mStart,
+    dStart,
+    yEnd,
+    mEnd,
+    dEnd
+  )
+
+  const fourDays = 4 * 24 * 60 * 60
+  const allSlugs = new Map()
+
+  let i = 1
+  for (const period of periods) {
+    console.log(`Gathering data -- batch ${i++} of ${periods.length}`)
+    // offset start and end by four days, so that any tournament lasting less than 8 days on their boundary is caught by at least one of them
+    const start = period[0] - fourDays
+    const end = period[1] + fourDays
+    const periodSlugs =
+      await this.getCompletedEventSlugsWithEntrantsInSinglePeriod(start, end)
+    for (const [key, value] of periodSlugs) {
+      allSlugs.set(key, value)
+    }
+  }
+  return allSlugs
 }
