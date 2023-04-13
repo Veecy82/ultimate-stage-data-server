@@ -2,8 +2,8 @@ const axios = require('axios')
 
 const util = require('../utility/util')
 
-const checkRepresentativeSet = require('../queries/check-representative-set')
-const findValidTournamentsInPeriod = require('../queries/find-valid-tournaments-in-period')
+const checkRepresentativeSet = require('../queries/checkRepresentativeSet')
+const findValidTournamentsInPeriod = require('../queries/findValidTournamentsInPeriod')
 
 /** Given a Promise `prom`, return a Promise that resolves to the same value as `prom` after it resolves, or after n seconds, whichever is longer */
 exports.stallPromise = async (prom, n) => {
