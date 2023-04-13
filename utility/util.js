@@ -83,3 +83,31 @@ exports.writeMapToJSON = async (pathToFile, map) => {
     throw e
   }
 }
+
+exports.getMapFromFiles = async (pathsToFiles) => {
+  const out = new Map()
+  for (const pathToFile of pathsToFiles) {
+    try {
+      const rawData = await fs.readFile(pathToFile)
+      const dataObj = JSON.parse(rawData)
+      for (const prop in dataObj) {
+        out.set(prop, dataObj[prop])
+      }
+    } catch (e) {
+      console.log(`Failed to read file ${pathToFile}`)
+      throw e
+    }
+  }
+  return out
+}
+
+/** Given a map and a callback function returning a boolean, return a new map with key, value pairs where the values return a truthy value when passed to `callbackFn` */
+exports.filterMapByValue = (map, callbackFn) => {
+  const out = new Map()
+  for (const [key, value] of map) {
+    if (callbackFn(value)) {
+      out.set(key, value)
+    }
+  }
+  return out
+}

@@ -3,19 +3,26 @@ require('dotenv').config()
 const apiTools = require('./utility/apiTools')
 const util = require('./utility/util')
 
-async function main() {
-  const year = 2023
+const char = require('./utility/charIdTools')
 
-  const slugs = await apiTools.getCompletedEventSlugsWithEntrantsInLongPeriod(
-    year,
-    1,
-    1,
-    year + 1,
-    1,
-    1
+async function main() {
+  const filePaths = []
+  for (let i = 2018; i <= 2023; i++) {
+    filePaths.push(`./misc-data/event-entrant-pairs/${i}.json`)
+  }
+  const allTourneys = await util.getMapFromFiles(filePaths)
+  const filteredTourneys = util.filterMapByValue(
+    allTourneys,
+    (val) => val > 1000
   )
 
-  await util.writeMapToJSON(`./misc-data/eventEntrantPairs/${year}.json`, slugs)
+  console.log(filteredTourneys)
+
+  console.log(
+    await apiTools.eventSlugRepresentativeHasStageData(
+      'tournament/domics-atomic-arena-4000-pot/event/wifi-singles-with-bans'
+    )
+  )
 }
 
 main()

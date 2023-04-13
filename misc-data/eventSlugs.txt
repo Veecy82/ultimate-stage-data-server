@@ -1,4 +1,0 @@
-completed, double-elim, no stage data: tournament/we-tech-those-15-georgia-tech/event/ultimate-singles
-completed, double-elim/gauntlet, stage data: tournament/smash-ultimate-summit-6/event/ultimate-singles
-
-completed, TONS of stage data, see if this surpasses the cap: https://www.start.gg/tournament/ultimate-naifu-wars-2/event/ultimate-1v1-naifu-wars/brackets/493019/856415
