@@ -1,6 +1,6 @@
 const axios = require('axios')
 
-const util = require('../utility/util')
+const util = require('./util')
 
 const checkRepresentativeSet = require('../queries/checkRepresentativeSet')
 const findValidTournamentsInPeriod = require('../queries/findValidTournamentsInPeriod')
@@ -40,9 +40,17 @@ exports.makeGraphQLRequest = async (query, variables, logMessage) => {
   } catch (e) {
     console.log('Error making GraphQL request')
     if (e.response) {
-      console.log('Although a connection with Start.gg was made:')
       if (e.response.data) {
-        console.log(e.response.data)
+        if (
+          e.response.data.includes(
+            "We're working to restore all services as soon as possible. Please check back soon."
+          )
+        ) {
+          console.log('Start.gg API had a hiccup')
+        } else {
+          console.log('Although a connection with Start.gg was made:')
+          console.log(e.response.data)
+        }
       }
     } else {
       console.log('Failed to connect to Start.gg API')
@@ -118,12 +126,14 @@ exports.makeGraphQLRequestStubborn = async (
  * GraphQL queries made: 1
  */
 exports.eventSlugRepresentativeHasStageData = async (slug) => {
+  const delayBetweenQueries = 1.5
   const response = await this.makeGraphQLRequestStubborn(
     checkRepresentativeSet.query,
     {
       slug,
     },
-    2
+    delayBetweenQueries,
+    'Checking if tournament reported stage data...'
   )
   try {
     const stageName = response.event.sets.nodes[0].games[0].stage.name
@@ -170,7 +180,7 @@ exports.findValidEventSlugsInSinglePeriod = async (unixStart, unixEnd) => {
   const validSlugs = []
   const tournamentsPerPage = 50
   // delay in seconds
-  const delayBetweenQueries = 2
+  const delayBetweenQueries = 1.5
 
   const handleResponse = (res) => {
     try {
@@ -239,7 +249,7 @@ exports.getCompletedEventSlugsWithEntrantsInSinglePeriod = async (
   const slugs = new Map()
   const tournamentsPerPage = 50
   // delay in seconds
-  const delayBetweenQueries = 3
+  const delayBetweenQueries = 1.5
 
   const handleResponse = (res) => {
     try {
@@ -358,7 +368,9 @@ exports.getCompletedEventSlugsWithEntrantsInLongPeriod = async (
 exports.getGamesFromVettedEvent = async (slug) => {
   const games = []
   const setsPerPage = 30
-  const delayBetweenQueries = 3
+  const delayBetweenQueries = 1.5
+
+  let foundStageDataOnCurrentPage = false
 
   const handleResponse = (res) => {
     try {
@@ -378,6 +390,7 @@ exports.getGamesFromVettedEvent = async (slug) => {
               game.selections[1].entrant.id &&
               game.selections[1].selectionValue
             ) {
+              foundStageDataOnCurrentPage = true
               const entrant0Won =
                 game.selections[0].entrant.id === game.winnerId
               const winChar = entrant0Won
@@ -399,15 +412,12 @@ exports.getGamesFromVettedEvent = async (slug) => {
                 losePlayer,
                 stage: game.stage.name,
                 isOnline: res.event.isOnline,
+                gameId: game.id,
                 setId: set.id,
                 slug,
               })
-            } else {
-              console.log("We're skipping a set!")
             }
           }
-        } else {
-          console.log("We're skipping a set")
         }
       }
     } catch (e) {
@@ -441,6 +451,11 @@ exports.getGamesFromVettedEvent = async (slug) => {
   handleResponse(response)
 
   for (let i = 2; i <= lastPage; i++) {
+    if (!foundStageDataOnCurrentPage) {
+      console.log(`[${slug}] Queried 30 sets without data, abandoning search`)
+      return games
+    }
+    foundStageDataOnCurrentPage = false
     response = await this.stallPromise(
       this.makeGraphQLRequestStubborn(
         getSetDataFromEvent.query,
@@ -458,4 +473,33 @@ exports.getGamesFromVettedEvent = async (slug) => {
   }
 
   return games
+}
+
+/** ONLY FOR USE DEBUGGING
+ *
+ * Print out sets and games with stage data found from an event slug
+ *
+ * Event slug should be previously vetted with `eventSlugRepresentativeHasStageData` as a heuristic for sets to have reported data
+ */
+exports.prettyPrintStageDataFromVettedEvent = async (slug) => {
+  const char = require('./charIdTools')
+
+  let lastSet = -1
+  let setCount = 1
+  let gameNumber = 1
+  const games = await this.getGamesFromVettedEvent(slug)
+
+  for (const game of games) {
+    if (game.setId !== lastSet) {
+      console.log(`DATA FOR SET ${setCount}:`)
+      lastSet = game.setId
+      setCount += 1
+      gameNumber = 1
+    }
+    console.log(
+      `GAME ${gameNumber++}: ${char.toName[game.winChar]} beats ${
+        char.toName[game.loseChar]
+      } on ${game.stage}`
+    )
+  }
 }

@@ -20,6 +20,7 @@ exports.query =
             selectionValue
           }
           winnerId
+          id
         }
       }
       pageInfo {

@@ -4,9 +4,9 @@
 //
 // They were initially run from `index.js`, so if you really want to run them you should paste them into there
 
-const apiTools = require('../utility/apiTools')
-const util = require('../utility/util')
-const char = require('../utility/charIdTools')
+const apiTools = require('../database-scripts/utility/apiTools')
+const util = require('../database-scripts/utility/util')
+const char = require('../database-scripts/utility/charIdTools')
 
 // Write `slug, numEntrants` pairs of all completed events in 2019 to file
 exports.example1 = async () => {
