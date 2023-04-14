@@ -15,7 +15,7 @@ mongoConnect().catch((err) => console.log(err))
 async function main() {
   await updateTools.processTournamentsFromFileOfEventSize(
     './misc-data/event-entrant-pairs/2018.json',
-    500
+    100
   )
   mongoose.disconnect()
 }

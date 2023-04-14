@@ -39,7 +39,15 @@ exports.processTournamentsFromFileOfEventSize = async (
   minEntrants
 ) => {
   const tournaments = await util.getMapFromFiles([pathToFile])
-  for (const [key, value] of tournaments) {
+  const filteredTournaments = util.filterMapByValue(
+    tournaments,
+    (v) => v >= minEntrants
+  )
+  let i = 1
+  for (const [key, value] of filteredTournaments) {
+    console.log(
+      `Checking tournament... (${i++} of ${filteredTournaments.size})`
+    )
     if (value >= minEntrants) {
       await this.processTournamentSlug(key)
     }
