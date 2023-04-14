@@ -6,6 +6,7 @@
  */
 const mongoTools = require('./utility/mongoTools')
 const apiTools = require('./utility/apiTools')
+const util = require('./utility/util')
 
 exports.processTournamentSlug = async (slug) => {
   if (await mongoTools.haveProcessedTournamentAlready(slug)) {
@@ -13,6 +14,7 @@ exports.processTournamentSlug = async (slug) => {
     return
   }
   if (!(await apiTools.eventSlugRepresentativeHasStageData(slug))) {
+    await mongoTools.saveProcessedTournamentToDatabase(slug)
     return
   }
   const games = await apiTools.getGamesFromVettedEvent(slug)
@@ -31,3 +33,19 @@ exports.processTournamentSlug = async (slug) => {
 }
 
 exports.processTournamentsInLongPeriod = async (unixStart, unixEnd) => {}
+
+exports.processTournamentsFromFileOfEventSize = async (
+  pathToFile,
+  minEntrants
+) => {
+  const tournaments = await util.getMapFromFiles([pathToFile])
+  for (const [key, value] of tournaments) {
+    if (value >= minEntrants) {
+      await this.processTournamentSlug(key)
+    }
+  }
+}
+
+exports.processTournamentsFromFile = async (pathToFile) => {
+  await this.processTournamentsFromFileOfEventSize(pathToFile, 0)
+}
