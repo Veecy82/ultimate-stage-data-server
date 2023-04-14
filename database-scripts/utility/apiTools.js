@@ -1,3 +1,10 @@
+/* apiTools.js
+ *
+ * A library of functions to communicate with Start.gg's GraphQL API
+ *
+ * Functions can make asynchronous requests to Start.gg, return ordinary Javascript objects, and do not communicate with USD's databases
+ */
+
 const axios = require('axios')
 
 const util = require('./util')
@@ -126,7 +133,7 @@ exports.makeGraphQLRequestStubborn = async (
  * GraphQL queries made: 1
  */
 exports.eventSlugRepresentativeHasStageData = async (slug) => {
-  const delayBetweenQueries = 1.5
+  const delayBetweenQueries = 1.3
   const response = await this.makeGraphQLRequestStubborn(
     checkRepresentativeSet.query,
     {
@@ -180,7 +187,7 @@ exports.findValidEventSlugsInSinglePeriod = async (unixStart, unixEnd) => {
   const validSlugs = []
   const tournamentsPerPage = 50
   // delay in seconds
-  const delayBetweenQueries = 1.5
+  const delayBetweenQueries = 1.3
 
   const handleResponse = (res) => {
     try {
@@ -249,7 +256,7 @@ exports.getCompletedEventSlugsWithEntrantsInSinglePeriod = async (
   const slugs = new Map()
   const tournamentsPerPage = 50
   // delay in seconds
-  const delayBetweenQueries = 1.5
+  const delayBetweenQueries = 1.3
 
   const handleResponse = (res) => {
     try {
@@ -368,7 +375,7 @@ exports.getCompletedEventSlugsWithEntrantsInLongPeriod = async (
 exports.getGamesFromVettedEvent = async (slug) => {
   const games = []
   const setsPerPage = 30
-  const delayBetweenQueries = 1.5
+  const delayBetweenQueries = 1.3
 
   let foundStageDataOnCurrentPage = false
 

@@ -6,3 +6,5 @@ completed, 823 entrants of stage data, see if this surpasses the cap: tournament
 completed, dude why does this tournament have 5605 entrants of stage data: tournament/domics-atomic-arena-4000-pot/event/wifi-singles-with-bans
 
 completed, 50 entrants of stage data: tournament/ib-server-weekly-46-eu-only/event/singles
+
+completed, 28 entrants with 3 games of stage data: tournament/hex-smash-edition-v8/event/ultimate-singles
