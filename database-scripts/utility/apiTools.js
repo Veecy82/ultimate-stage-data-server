@@ -381,48 +381,53 @@ exports.getGamesFromVettedEvent = async (slug) => {
 
   const handleResponse = (res) => {
     try {
-      for (const set of res.event.sets.nodes) {
-        if (set.games) {
-          for (const game of set.games) {
-            if (
-              game.winnerId &&
-              game.stage &&
-              game.stage.name &&
-              game.selections &&
-              game.selections.length === 2 &&
-              game.selections[0].entrant &&
-              game.selections[0].entrant.id &&
-              game.selections[0].selectionValue &&
-              game.selections[1].entrant &&
-              game.selections[1].entrant.id &&
-              game.selections[1].selectionValue
-            ) {
-              foundStageDataOnCurrentPage = true
-              const entrant0Won =
-                game.selections[0].entrant.id === game.winnerId
-              const winChar = entrant0Won
-                ? game.selections[0].selectionValue
-                : game.selections[1].selectionValue
-              const loseChar = entrant0Won
-                ? game.selections[1].selectionValue
-                : game.selections[0].selectionValue
-              const winPlayer = entrant0Won
-                ? game.selections[0].entrant.id
-                : game.selections[1].entrant.id
-              const losePlayer = entrant0Won
-                ? game.selections[1].entrant.id
-                : game.selections[0].entrant.id
-              games.push({
-                winChar,
-                loseChar,
-                winPlayer,
-                losePlayer,
-                stage: game.stage.name,
-                isOnline: res.event.isOnline,
-                gameId: game.id,
-                setId: set.id,
-                slug,
-              })
+      // for tournaments with over 10,000 sets of stage data, res.event.sets will be `null` due to the start.gg API complexity limit
+      // in this case, there is no data to process, so just leave foundStageDataOnCurrentPage as false
+      // this should occur for very few tournaments. as far as I am aware, there are only 2-5 tournaments where this occurs, and still the top 10,000 sets of stage data are recorded by this script
+      if (res.event.sets) {
+        for (const set of res.event.sets.nodes) {
+          if (set.games) {
+            for (const game of set.games) {
+              if (
+                game.winnerId &&
+                game.stage &&
+                game.stage.name &&
+                game.selections &&
+                game.selections.length === 2 &&
+                game.selections[0].entrant &&
+                game.selections[0].entrant.id &&
+                game.selections[0].selectionValue &&
+                game.selections[1].entrant &&
+                game.selections[1].entrant.id &&
+                game.selections[1].selectionValue
+              ) {
+                foundStageDataOnCurrentPage = true
+                const entrant0Won =
+                  game.selections[0].entrant.id === game.winnerId
+                const winChar = entrant0Won
+                  ? game.selections[0].selectionValue
+                  : game.selections[1].selectionValue
+                const loseChar = entrant0Won
+                  ? game.selections[1].selectionValue
+                  : game.selections[0].selectionValue
+                const winPlayer = entrant0Won
+                  ? game.selections[0].entrant.id
+                  : game.selections[1].entrant.id
+                const losePlayer = entrant0Won
+                  ? game.selections[1].entrant.id
+                  : game.selections[0].entrant.id
+                games.push({
+                  winChar,
+                  loseChar,
+                  winPlayer,
+                  losePlayer,
+                  stage: game.stage.name,
+                  isOnline: res.event.isOnline,
+                  gameId: game.id,
+                  setId: set.id,
+                  slug,
+                })
+              }
             }
           }
         }
