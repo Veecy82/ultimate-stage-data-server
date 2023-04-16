@@ -374,7 +374,7 @@ exports.getCompletedEventSlugsWithEntrantsInLongPeriod = async (
  */
 exports.getGamesFromVettedEvent = async (slug) => {
   const games = []
-  const setsPerPage = 30
+  const setsPerPage = 25
   const delayBetweenQueries = 1.3
 
   let foundStageDataOnCurrentPage = false
@@ -464,7 +464,9 @@ exports.getGamesFromVettedEvent = async (slug) => {
 
   for (let i = 2; i <= lastPage; i++) {
     if (!foundStageDataOnCurrentPage) {
-      console.log(`[${slug}] Queried 30 sets without data, abandoning search`)
+      console.log(
+        `[${slug}] Queried ${setsPerPage} sets without data, abandoning search`
+      )
       return games
     }
     foundStageDataOnCurrentPage = false
