@@ -43,7 +43,11 @@ exports.makeGraphQLRequest = async (query, variables, logMessage) => {
         },
       }
     )
-    return res.data.data
+    if (res.data.errors) {
+      return res.data
+    } else {
+      return res.data.data
+    }
   } catch (e) {
     console.log('Error making GraphQL request')
     if (e.response) {
@@ -374,7 +378,7 @@ exports.getCompletedEventSlugsWithEntrantsInLongPeriod = async (
  */
 exports.getGamesFromVettedEvent = async (slug) => {
   const games = []
-  const setsPerPage = 25
+  const setsPerPage = 30
   const delayBetweenQueries = 1.3
 
   let foundStageDataOnCurrentPage = false
@@ -452,7 +456,17 @@ exports.getGamesFromVettedEvent = async (slug) => {
     delayBetweenQueries
   )
   let lastPage
+
   try {
+    try {
+      const errMsg = response.errors[0].message
+      if (errMsg.includes('Your query complexity is too high')) {
+        console.log(
+          `Query complexity for [${slug}] too high, probably ran sets larger than Bo5`
+        )
+        return games
+      }
+    } catch (e) {}
     lastPage = response.event.sets.pageInfo.totalPages
   } catch (e) {
     console.log(
