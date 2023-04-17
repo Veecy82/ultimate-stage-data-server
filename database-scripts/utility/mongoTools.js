@@ -55,3 +55,21 @@ exports.checkAndSaveGameToDatabase = async (gameObject) => {
   await this.saveGameToDatabase(gameObject)
   return true
 }
+
+/** Asynchronously count the total number of games in the database
+ *
+ * To specify online or offline, pass an object `options` with a boolean property `isOnline`
+ */
+exports.getTotalGames = async (options) => {
+  const opts = {}
+  if (options) {
+    if (typeof options === 'object' && typeof options.isOnline === 'boolean') {
+      opts.isOnline = options.isOnline
+    }
+  }
+  return await Game.countDocuments(opts)
+}
+
+exports.getTotalTournaments = async (options) => {
+  return await ProcessedTournament.countDocuments({})
+}
