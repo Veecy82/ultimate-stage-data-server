@@ -4,6 +4,7 @@
   "description": "Smash Ultimate stage statistics",
   "main": "server.js",
   "scripts": {
+    "tailwind": "postcss public/styles/tailwind.css -o public/styles/style.css",
     "dev": "nodemon server.js",
     "serve": "node server.js",
     "sandbox": "node sandbox.js",
@@ -20,13 +21,17 @@
   },
   "homepage": "https://github.com/Corncycle/ultimate-stage-data-server#readme",
   "dependencies": {
+    "autoprefixer": "^10.4.14",
     "axios": "^1.3.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "http-errors": "^2.0.0",
     "mongoose": "^7.0.3",
     "morgan": "^1.10.0",
-    "pug": "^3.0.2"
+    "postcss": "^8.4.22",
+    "postcss-cli": "^10.1.0",
+    "pug": "^3.0.2",
+    "tailwindcss": "^3.3.1"
   },
   "devDependencies": {
     "eslint": "^8.38.0",

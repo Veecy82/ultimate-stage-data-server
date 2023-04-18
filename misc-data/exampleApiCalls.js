@@ -5,6 +5,7 @@
 // They were initially run from `index.js`, so if you really want to run them you should paste them into there
 
 const apiTools = require('../database-scripts/utility/apiTools')
+const updateTools = require('../database-scripts/updateTools')
 const util = require('../database-scripts/utility/util')
 const char = require('../database-scripts/utility/charIdTools')
 
@@ -88,4 +89,12 @@ exports.example4 = async () => {
 
   console.log(games)
   console.log(`${games.length} games with data found`)
+}
+
+// Populate database with all games from events from file `2023.json`
+exports.example5 = async () => {
+  await updateTools.processTournamentsFromFileOfEventSize(
+    './misc-data/event-entrant-pairs/2023.json',
+    100
+  )
 }

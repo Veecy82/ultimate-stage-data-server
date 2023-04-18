@@ -14,4 +14,8 @@ const GameSchema = new Schema({
   slug: { type: String, required: true },
 })
 
+GameSchema.index({ winChar: 1 })
+GameSchema.index({ winChar: 1, stage: 1 })
+GameSchema.index({ loseChar: 1, stage: 1 })
+
 module.exports = mongoose.model('Game', GameSchema)

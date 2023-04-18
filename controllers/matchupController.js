@@ -22,7 +22,6 @@ exports.matchup = async (req, res, next) => {
   }
 
   const data = await mongoTools.getMatchupDataOverall(char1Id, char2Id)
-  console.log(data)
 
   res.render('matchup', {
     name1: char.toName[char1Id],

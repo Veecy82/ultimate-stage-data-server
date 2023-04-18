@@ -1,9 +1,21 @@
+mixin smashbutton(text)
+  .p-2.bg-yellow-500
+    button.bg-white= text
+
 html(lang='en')
   head 
     title= title
     meta(charset='utf-8')
     meta(name='viewport', content='width=device-width, initial-scale=1')
+    link(rel="stylesheet", href="/styles/style.css")
     
-  body 
-    div 
+  body.flex.flex-col
+    .flex.flex-row.justify-between
+      div Ultimate Stage Data
+      ul.flex.flex-row
+        li Character 
+        li Matchup 
+        li About
+    +smashbutton("Test!")
+    div
       block content

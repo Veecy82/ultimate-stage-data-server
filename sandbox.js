@@ -19,20 +19,15 @@ mongoConnect().catch((err) => console.log(err))
 const Game = require('./models/game')
 
 async function main() {
-  /*  console.log(`Online games: ${await Game.countDocuments({ isOnline: true })}`)
+  console.log(`Online games: ${await Game.countDocuments({ isOnline: true })}`)
   console.log(
     `Offline games: ${await Game.countDocuments({ isOnline: false })}`
+  )
+
+  /* await updateTools.processTournamentsFromFileOfEventSize(
+    './misc-data/event-entrant-pairs/2023.json',
+    100
   ) */
-
-  await updateTools.processTournamentsFromFileOfEventSize(
-    './misc-data/event-entrant-pairs/2021.json',
-    100
-  )
-
-  await updateTools.processTournamentsFromFileOfEventSize(
-    './misc-data/event-entrant-pairs/2022.json',
-    100
-  )
 
   mongoose.disconnect()
 }
