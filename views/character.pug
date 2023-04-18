@@ -5,8 +5,23 @@ block content
   h4 Overall win-loss: #{wins} - #{losses}
   
   h3 Stage-specific data
+  h4 Starters
   ul 
-    each stage in stageData 
+    each stage in stageData.starterStages
+      li 
+        h4= stage.stage
+        span #{stage.wins} - #{stage.losses} (#{Math.round(10000 * stage.wins / (stage.wins + stage.losses)) / 100}% winrate)
+  
+  h4 Counterpicks
+  ul 
+    each stage in stageData.counterpickStages
+      li 
+        h4= stage.stage
+        span #{stage.wins} - #{stage.losses} (#{Math.round(10000 * stage.wins / (stage.wins + stage.losses)) / 100}% winrate)
+
+  h4 Retired
+  ul 
+    each stage in stageData.retiredStages
       li 
         h4= stage.stage
         span #{stage.wins} - #{stage.losses} (#{Math.round(10000 * stage.wins / (stage.wins + stage.losses)) / 100}% winrate)

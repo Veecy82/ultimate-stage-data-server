@@ -1,15 +1,23 @@
 {
-    "stages": [
+    "starterStages": [
         "Pokémon Stadium 2",
         "Small Battlefield",
         "Battlefield",
-        "Hollow Bastion",
-        "Final Destination",
         "Smashville",
+        "Hollow Bastion",
+        "Final Destination"
+    ],
+    "counterpickStages": [
         "Town and City",
         "Kalos Pokémon League",
-        "Northern Cave",
+        "Northern Cave"
+    ],
+    "retiredStages": [
+        "Yoshi's Story",
         "Lylat Cruise",
-        "Yoshi's Story"
+        "Pokémon Stadium",
+        "Unova Pokémon League",
+        "Yoshi's Island",
+        "Castle Siege"
     ]
 }

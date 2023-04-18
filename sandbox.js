@@ -5,6 +5,7 @@ require('dotenv').config()
 
 const apiTools = require('./database-scripts/utility/apiTools')
 const updateTools = require('./database-scripts/updateTools')
+const mongoTools = require('./database-scripts/utility/mongoTools')
 const util = require('./database-scripts/utility/util')
 
 const char = require('./database-scripts/utility/charIdTools')
@@ -24,10 +25,7 @@ async function main() {
     `Offline games: ${await Game.countDocuments({ isOnline: false })}`
   )
 
-  /* await updateTools.processTournamentsFromFileOfEventSize(
-    './misc-data/event-entrant-pairs/2023.json',
-    100
-  ) */
+  console.log(await mongoTools.getCharacterDataOnEachStage(1337))
 
   mongoose.disconnect()
 }

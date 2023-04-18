@@ -8,6 +8,8 @@
 const ProcessedTournament = require('../../models/processedTournament')
 const Game = require('../../models/game')
 
+const util = require('./util')
+
 exports.haveProcessedTournamentAlready = async (slug) => {
   try {
     const pt = await ProcessedTournament.findOne({ slug })
@@ -83,11 +85,11 @@ exports.getCharacterDataOverall = async (charId) => {
 }
 
 exports.getMatchupDataOverall = async (char1Id, char2Id) => {
-  const data = await Promise.all([
+  const [char1Wins, char2Wins] = await Promise.all([
     Game.countDocuments({ winChar: char1Id, loseChar: char2Id }),
     Game.countDocuments({ winChar: char2Id, loseChar: char1Id }),
   ])
-  return { char1Wins: data[0], char2Wins: data[1] }
+  return { char1Wins, char2Wins }
 }
 
 exports.getCharacterDataOnStage = async (charId, stage) => {
@@ -99,9 +101,91 @@ exports.getCharacterDataOnStage = async (charId, stage) => {
 }
 
 exports.getMatchupDataOnStage = async (char1Id, char2Id, stage) => {
-  const data = await Promise.all([
+  const [char1Wins, char2Wins] = await Promise.all([
     Game.countDocuments({ winChar: char1Id, loseChar: char2Id, stage }),
     Game.countDocuments({ winChar: char2Id, loseChar: char1Id, stage }),
   ])
-  return { char1Wins: data[0], char2Wins: data[1], stage }
+  return { char1Wins, char2Wins }
+}
+
+exports.getCharacterDataOnEachStage = async (charId) => {
+  const [winData, lossData] = await Promise.all([
+    Game.aggregate([
+      { $match: { winChar: charId } },
+      { $group: { _id: '$stage', count: { $sum: 1 } } },
+    ]),
+    Game.aggregate([
+      { $match: { loseChar: charId } },
+      { $group: { _id: '$stage', count: { $sum: 1 } } },
+    ]),
+  ])
+
+  const data = { starterStages: [], counterpickStages: [], retiredStages: [] }
+  for (const stage of util.stages.starterStages) {
+    let wins = 0
+    let losses = 0
+    for (const obj of winData) {
+      if (obj._id === stage) {
+        wins = obj.count
+        break
+      }
+    }
+    for (const obj of lossData) {
+      if (obj._id === stage) {
+        losses = obj.count
+        break
+      }
+    }
+    data.starterStages.push({
+      stage,
+      wins,
+      losses,
+    })
+  }
+
+  for (const stage of util.stages.counterpickStages) {
+    let wins = 0
+    let losses = 0
+    for (const obj of winData) {
+      if (obj._id === stage) {
+        wins = obj.count
+        break
+      }
+    }
+    for (const obj of lossData) {
+      if (obj._id === stage) {
+        losses = obj.count
+        break
+      }
+    }
+    data.counterpickStages.push({
+      stage,
+      wins,
+      losses,
+    })
+  }
+
+  for (const stage of util.stages.retiredStages) {
+    let wins = 0
+    let losses = 0
+    for (const obj of winData) {
+      if (obj._id === stage) {
+        wins = obj.count
+        break
+      }
+    }
+    for (const obj of lossData) {
+      if (obj._id === stage) {
+        losses = obj.count
+        break
+      }
+    }
+    data.retiredStages.push({
+      stage,
+      wins,
+      losses,
+    })
+  }
+
+  return data
 }
