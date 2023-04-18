@@ -70,6 +70,38 @@ exports.getTotalGames = async (options) => {
   return await Game.countDocuments(opts)
 }
 
-exports.getTotalTournaments = async (options) => {
+exports.getTotalTournaments = async () => {
   return await ProcessedTournament.countDocuments({})
+}
+
+exports.getCharacterDataOverall = async (charId) => {
+  const [wins, losses] = await Promise.all([
+    Game.countDocuments({ winChar: charId }),
+    Game.countDocuments({ loseChar: charId }),
+  ])
+  return { wins, losses }
+}
+
+exports.getMatchupDataOverall = async (char1Id, char2Id) => {
+  const data = await Promise.all([
+    Game.countDocuments({ winChar: char1Id, loseChar: char2Id }),
+    Game.countDocuments({ winChar: char2Id, loseChar: char1Id }),
+  ])
+  return { char1Wins: data[0], char2Wins: data[1] }
+}
+
+exports.getCharacterDataOnStage = async (charId, stage) => {
+  const [wins, losses] = await Promise.all([
+    Game.countDocuments({ winChar: charId, stage }),
+    Game.countDocuments({ loseChar: charId, stage }),
+  ])
+  return { wins, losses, stage }
+}
+
+exports.getMatchupDataOnStage = async (char1Id, char2Id, stage) => {
+  const data = await Promise.all([
+    Game.countDocuments({ winChar: char1Id, loseChar: char2Id, stage }),
+    Game.countDocuments({ winChar: char2Id, loseChar: char1Id, stage }),
+  ])
+  return { char1Wins: data[0], char2Wins: data[1], stage }
 }

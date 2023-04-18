@@ -5,12 +5,18 @@ const dataObj = JSON.parse(rawData)
 const characters = dataObj.characters
 
 const toName = {}
-const toId = {}
+const toInternal = {}
+const nameToId = {}
+const internalToId = {}
 
 for (const character of characters) {
   toName[character.id] = character.name
-  toId[character.name] = character.id
+  toInternal[character.id] = character.internal
+  nameToId[character.name] = character.id
+  internalToId[character.internal] = character.id
 }
 
 exports.toName = toName
-exports.toId = toId
+exports.toInternal = toInternal
+exports.nameToId = nameToId
+exports.internalToId = internalToId

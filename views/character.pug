@@ -1,0 +1,12 @@
+extends layout 
+
+block content
+  h2 Stage data for #{name}
+  h4 Overall win-loss: #{wins} - #{losses}
+  
+  h3 Stage-specific data
+  ul 
+    each stage in stageData 
+      li 
+        h4= stage.stage
+        span #{stage.wins} - #{stage.losses} (#{Math.round(10000 * stage.wins / (stage.wins + stage.losses)) / 100}% winrate)

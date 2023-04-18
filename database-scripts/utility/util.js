@@ -1,4 +1,7 @@
 const fs = require('fs/promises')
+const fss = require('fs')
+
+exports.stages = JSON.parse(fss.readFileSync('./views/stageConfig.json')).stages
 
 exports.ymdToUnixTimestamp = (year, month, day) => {
   return Math.floor(Date.UTC(year, month - 1, day, 0, 0, 0, 0) / 1000)
