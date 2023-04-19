@@ -1,27 +1,49 @@
 extends layout 
 
-block content
-  h2 Stage data for #{name}
-  h4 Overall win-loss: #{wins} - #{losses}
-  
-  h3 Stage-specific data
-  h4 Starters
-  ul 
-    each stage in stageData.starterStages
-      li 
-        h4= stage.stage
-        span #{stage.wins} - #{stage.losses} (#{Math.round(10000 * stage.wins / (stage.wins + stage.losses)) / 100}% winrate)
-  
-  h4 Counterpicks
-  ul 
-    each stage in stageData.counterpickStages
-      li 
-        h4= stage.stage
-        span #{stage.wins} - #{stage.losses} (#{Math.round(10000 * stage.wins / (stage.wins + stage.losses)) / 100}% winrate)
+mixin card(stageBg, tl, bl, tr, br, allPct, stagePct)
+  .relative.w-full.max-w-2xl.m-4
+    div.w-full.aspect-video.bg-cover.bg-center.rounded-xl.contrast-50.grayscale.opacity-40(style=`background-image: url('/images/stages/${stageBg}.png')`)
+    div.absolute.-top-2.w-2.h-2.border-8.border-transparent.border-t-gray-500(class="-translate-x-1/2" style=`left: ${allPct}%`)
+    div.absolute.w-2.h-2.border-8.border-transparent.border-b-gray-500(class="-translate-x-1/2" style=`left: ${allPct}%; top: calc(100% - 8px)`)
+    div.absolute.top-0.bottom-0.left-0.bg-red-700.rounded-l-xl.opacity-50(style=`right: ${100-stagePct}%`)
 
-  h4 Retired
-  ul 
-    each stage in stageData.retiredStages
-      li 
-        h4= stage.stage
-        span #{stage.wins} - #{stage.losses} (#{Math.round(10000 * stage.wins / (stage.wins + stage.losses)) / 100}% winrate)
+    span.absolute.top-3.left-3.text-6xl= tl + "%"
+    span.absolute.top-3.right-3.text-6xl= tr + "%"
+    span.absolute.bottom-3.left-3.text-xl= bl + " games"
+    span.absolute.bottom-3.right-3.text-xl= br + " games"
+
+block content
+  div.p-4
+    div.relative.flex.flex-col.items-center
+      h2 Stage data for #{name}
+      h4 Overall win-loss: #{wins} - #{losses}
+      h4 Overall win percentage: #{winPct}%
+      
+      h3 Stage-specific data
+      h4 Starters
+      ul.flex.flex-col.items-center.w-full
+        each stage in stageData.starterStages
+          li.flex.flex-col.items-center.w-full
+            h4= stage.stage
+            +card(stageBgs[stage.stage], stage.winPct, stage.wins, stage.losePct, stage.losses, winPct, stage.winPct)
+      
+      h4 Counterpicks
+      ul.flex.flex-col.items-center.w-full
+        each stage in stageData.counterpickStages
+          li.flex.flex-col.items-center.w-full
+            h4= stage.stage
+            +card(stageBgs[stage.stage], stage.winPct, stage.wins, stage.losePct, stage.losses, winPct, stage.winPct)
+
+      h4 Retired
+      ul.flex.flex-col.items-center.w-full
+        each stage in stageData.retiredStages
+          li.flex.flex-col.items-center.w-full
+            h4= stage.stage
+            +card(stageBgs[stage.stage], stage.winPct, stage.wins, stage.losePct, stage.losses, winPct, stage.winPct)
+
+      h4 Low Data
+      ul.flex.flex-col.items-center.w-full
+        each stage in stageData.lowDataStages
+          li.flex.flex-col.items-center.w-full
+            h4= stage.stage
+            +card(stageBgs[stage.stage], stage.winPct, stage.wins, stage.losePct, stage.losses, winPct, stage.winPct)

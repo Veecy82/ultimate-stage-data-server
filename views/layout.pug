@@ -1,5 +1,10 @@
-mixin smashbutton(text)
-  .p-2.bg-yellow-500
+mixin smashbuttonhref(text, href)
+  a(href=href)
+    div.smash-button-border(class="p-1.5")
+      button.bg-black.text-white.uppercase.font-bold.px-2.py-1= text
+
+mixin smashbuttononclick(text, onclick)
+  div.p-1.bg-yellow-500
     button.bg-white= text
 
 html(lang='en')
@@ -8,14 +13,16 @@ html(lang='en')
     meta(charset='utf-8')
     meta(name='viewport', content='width=device-width, initial-scale=1')
     link(rel="stylesheet", href="/styles/style.css")
+    link(rel="stylesheet", href="/styles/custom.css")
     
-  body.flex.flex-col
-    .flex.flex-row.justify-between
-      div Ultimate Stage Data
-      ul.flex.flex-row
-        li Character 
-        li Matchup 
-        li About
-    +smashbutton("Test!")
-    div
+  body.flex.flex-col.items-center.overflow-x-hidden
+    div.flex.flex-row.gap-4.items-center.justify-between.w-full.bg-amber-500.py-2.px-4
+      a(href="/")
+        h1.text-2xl.font-bold.whitespace-nowrap Ultimate Stage Data
+      ul.flex.flex-row.gap-2
+        each nav in ["character", "matchup", "about"]
+          li 
+            a(href="/" + nav)
+              span= nav
+    div.w-full
       block content

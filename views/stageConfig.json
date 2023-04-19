@@ -19,5 +19,22 @@
         "Unova Pokémon League",
         "Yoshi's Island",
         "Castle Siege"
-    ]
+    ],
+    "images": {
+        "Pokémon Stadium 2": "pokemonStadium2",
+        "Small Battlefield": "smallBattlefield",
+        "Battlefield": "battlefield",
+        "Smashville": "smashville",
+        "Hollow Bastion": "hollowBastion",
+        "Final Destination": "finalDestination",
+        "Town and City": "townAndCity",
+        "Kalos Pokémon League": "kalosPokemonLeague",
+        "Northern Cave": "northernCave",
+        "Yoshi's Story": "yoshisStory",
+        "Lylat Cruise": "lylatCruise",
+        "Pokémon Stadium": "pokemonStadium",
+        "Unova Pokémon League": "unovaPokemonLeague",
+        "Yoshi's Island": "yoshisStory",
+        "Castle Siege": "castleSiege"
+    }
 }

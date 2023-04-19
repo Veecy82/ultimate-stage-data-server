@@ -1,0 +1,22 @@
+.smash-button-border:hover {
+    --border-color-1: yellow;
+    --border-color-2: darkorange;
+
+    background-image: linear-gradient(to right, var(--border-color-1), var(--border-color-2), var(--border-color-1), var(--border-color-2), var(--border-color-1));
+    background-size: 400% 100%;
+    animation: 3s linear infinite smash-button-background;
+}
+
+.smash-button-border:hover button {
+    color: yellow;
+}
+
+@keyframes smash-button-background {
+    0% {
+        background-position-x: 200%;
+    }
+
+    100% {
+        background-position-x: 0%;
+    }
+}
