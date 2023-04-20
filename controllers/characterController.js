@@ -12,15 +12,26 @@ exports.character = async (req, res, next) => {
     return next(err)
   }
 
-  const overallData = await mongoTools.getCharacterDataOverall(charId)
+  let overallData
+  try {
+    overallData = await mongoTools.getCharacterDataOverall(charId)
+  } catch (e) {
+    return next(e)
+  }
   const winPct =
     Math.round(
       (10000 * overallData.wins) / (overallData.wins + overallData.losses)
     ) / 100
 
-  const stageData = await mongoTools.getCharacterDataOnEachStage(charId)
+  let stageData
+  try {
+    stageData = await mongoTools.getCharacterDataOnEachStage(charId)
+  } catch (e) {
+    return next(e)
+  }
 
   res.render('character', {
+    route: 'character',
     name: char.toName[charId],
     internal: char.toInternal[charId],
     wins: overallData.wins,
@@ -28,5 +39,11 @@ exports.character = async (req, res, next) => {
     winPct,
     stageData,
     stageBgs: util.stages.images,
+  })
+}
+
+exports.characterForm = async (req, res, next) => {
+  res.render('characterForm', {
+    route: 'character',
   })
 }

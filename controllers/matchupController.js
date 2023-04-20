@@ -24,9 +24,16 @@ exports.matchup = async (req, res, next) => {
   const data = await mongoTools.getMatchupDataOverall(char1Id, char2Id)
 
   res.render('matchup', {
+    route: 'matchup',
     name1: char.toName[char1Id],
     name2: char.toName[char2Id],
     name1Wins: data.char1Wins,
     name2Wins: data.char2Wins,
+  })
+}
+
+exports.matchupForm = async (req, res, next) => {
+  res.render('matchupForm', {
+    route: 'matchup',
   })
 }

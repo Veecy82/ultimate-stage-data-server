@@ -110,7 +110,7 @@ exports.getMatchupDataOnStage = async (char1Id, char2Id, stage) => {
 
 exports.getCharacterDataOnEachStage = async (charId) => {
   // percentage of total games required to be deemed significant (between 0 and 1)
-  const sigPctThreshold = 0.03
+  const sigPctThreshold = 0.01
   // number of total games required to be deemed significant (positive integer)
   const sigQuantThreshold = 200
 
@@ -168,7 +168,7 @@ exports.getCharacterDataOnEachStage = async (charId) => {
         losePct: Math.round((10000 * losses) / (wins + losses)) / 100 || 0,
       }
       if (
-        obj.wins + obj.losses >= sigQuantThreshold &&
+        obj.wins + obj.losses >= sigQuantThreshold ||
         (obj.wins + obj.losses) / totalGames >= sigPctThreshold
       ) {
         data[category].push(obj)

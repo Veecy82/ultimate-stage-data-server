@@ -9,6 +9,7 @@ const logger = require('morgan')
 const indexRouter = require('./routes/index')
 const characterRouter = require('./routes/character')
 const matchupRouter = require('./routes/matchup')
+const aboutRouter = require('./routes/about')
 
 const app = express()
 
@@ -31,6 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use('/', indexRouter)
 app.use('/character', characterRouter)
 app.use('/matchup', matchupRouter)
+app.use('/about', aboutRouter)
 
 // forward any requests unhandled by routers to error handler
 app.use(function (req, res, next) {
@@ -38,6 +40,10 @@ app.use(function (req, res, next) {
 })
 
 app.use(function (err, req, res, next) {
+  if (err.message.includes('buffering timed out')) {
+    err.message = 'Server failed to connect to database'
+  }
+
   res.locals.message = err.message
   res.locals.error = req.app.get('env') === 'development' ? err : {}
 

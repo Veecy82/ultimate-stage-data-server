@@ -24,21 +24,21 @@ html(lang='en')
     script(src="/scripts/hamburger.js" defer) 
 
   body.flex.flex-col.items-center.overflow-x-hidden
-    div.flex.flex-row.gap-4.items-center.justify-between.w-full.bg-amber-500.py-4.px-4
-      a.text-3xl.font-bold.whitespace-pre.font-fjalla(href="/")
-        h1
-          span Ultimate 
-          span.text-slate-800 Stage 
-          span Data
+    div.flex.flex-row.gap-4.items-center.justify-between.w-full.bg-black.px-4.shadow-lg
+      a.text-xl.font-bold.whitespace-pre.font-fjalla(class="xs:text-3xl" href="/")
+        h1.py-4
+          span.text-white Ultimate 
+          span.text-yellow-500 Stage 
+          span.text-white Data
 
-      ul.flex.flex-row.gap-6
+      ul.h-full.flex.flex-row.items-center
         each nav in ["character", "matchup", "about"]
-          li.hidden(class="sm:block")
-            a(href="/" + nav)
-              span.uppercase.font-bold= nav
+          li.h-full.hidden.justify-center.items-center(class="sm:block hover:bg-zinc-800")
+            a.h-full.px-4.flex.items-center(href="/" + nav)
+              span.uppercase.font-bold.decoration-2.underline-offset-4.text-white(class=`${route === nav ? "underline": ""}`)= nav
         li.hamburger.block(class="sm:hidden")
-          button Test
-    div.navmenu.max-h-0.w-full.overflow-hidden.bg-slate-900(class="sm:hidden")
+          button.text-white Test
+    div.navmenu.max-h-0.w-full.overflow-hidden.bg-zinc-700(class="sm:hidden")
       ul.flex.flex-col.items-end.p-2
         each nav in ["character", "matchup", "about"]
           li
