@@ -1,7 +1,9 @@
 mixin smashbuttonhref(text, href)
   a(href=href)
     div.smash-button-border(class="p-1.5")
-      button.bg-black.text-white.uppercase.font-bold.px-2.py-1= text
+      button.bg-black.text-white.uppercase.font-bold.px-3.py-1.flex.items-center.gap-1.whitespace-nowrap
+        span #{text}
+        span.chevron
 
 mixin smashbuttononclick(text, onclick)
   div.p-1.bg-yellow-500
@@ -15,14 +17,32 @@ html(lang='en')
     link(rel="stylesheet", href="/styles/style.css")
     link(rel="stylesheet", href="/styles/custom.css")
     
+    link(rel="preconnect" href="https://fonts.googleapis.com")
+    link(rel="preconnect" href="https://fonts.gstatic.com" crossorigin)
+    link(href="https://fonts.googleapis.com/css2?family=Fjalla+One&family=Roboto:wght@100;300;400;500;700&display=swap" rel="stylesheet")
+
+    script(src="/scripts/hamburger.js" defer) 
+
   body.flex.flex-col.items-center.overflow-x-hidden
-    div.flex.flex-row.gap-4.items-center.justify-between.w-full.bg-amber-500.py-2.px-4
-      a(href="/")
-        h1.text-2xl.font-bold.whitespace-nowrap Ultimate Stage Data
-      ul.flex.flex-row.gap-2
+    div.flex.flex-row.gap-4.items-center.justify-between.w-full.bg-amber-500.py-4.px-4
+      a.text-3xl.font-bold.whitespace-pre.font-fjalla(href="/")
+        h1
+          span Ultimate 
+          span.text-slate-800 Stage 
+          span Data
+
+      ul.flex.flex-row.gap-6
         each nav in ["character", "matchup", "about"]
-          li 
+          li.hidden(class="sm:block")
             a(href="/" + nav)
-              span= nav
+              span.uppercase.font-bold= nav
+        li.hamburger.block(class="sm:hidden")
+          button Test
+    div.navmenu.max-h-0.w-full.overflow-hidden.bg-slate-900(class="sm:hidden")
+      ul.flex.flex-col.items-end.p-2
+        each nav in ["character", "matchup", "about"]
+          li
+            a(href="/" + nav)
+              span.text-white.uppercase.font-bold= nav
     div.w-full
       block content

@@ -11,6 +11,71 @@
     color: yellow;
 }
 
+.navmenu {
+    transition: 0.6s max-height;
+}
+
+.navmenu-open {
+    max-height: calc(4.5rem + 12px);
+}
+
+.smash-button-border:hover .chevron::before {
+    border-color: yellow;
+}
+
+.chevron {
+    display: inline-flex;
+    align-items: center;
+}
+
+.indicator-top, .indicator-bottom {
+    border-width: 12px;
+}
+
+.indicator-top, .indicator-bottom, .indicator-bar {
+    transition: 0.2s;
+}
+
+.tooltip::before {
+    transition: opacity 0.2s;
+}
+
+.tooltip:hover::before {
+    transition: opacity 0.2s;
+    opacity: 100%
+}
+
+.tooltip::before {
+    pointer-events: none;
+    cursor: auto;
+}
+
+.indicator:hover .indicator-top {
+    border-top-color: black;
+}
+
+.indicator:hover .indicator-bottom {
+    border-bottom-color: black;
+}
+
+.indicator:hover .indicator-bar {
+    background-color: black;
+}
+
+/* chevron css by https://codepen.io/stepher/pen/yLOaEOP */
+.chevron::before {
+    border-color: white;
+	border-style: solid;
+	border-width: 0.12em 0.12em 0 0;
+	content: '';
+	display: inline-block;
+	height: 0.45em;
+	position: relative;
+	vertical-align: top;
+	width: 0.45em;
+    transform: rotate(45deg);
+}
+
 @keyframes smash-button-background {
     0% {
         background-position-x: 200%;

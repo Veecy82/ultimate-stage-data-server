@@ -177,7 +177,14 @@ exports.getCharacterDataOnEachStage = async (charId) => {
       }
     }
   }
-  console.log(data)
 
+  for (const category of [
+    'starterStages',
+    'counterpickStages',
+    'retiredStages',
+    'lowDataStages',
+  ]) {
+    data[category].sort((a, b) => b.winPct - a.winPct)
+  }
   return data
 }
