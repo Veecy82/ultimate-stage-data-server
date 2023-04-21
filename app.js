@@ -40,8 +40,12 @@ app.use(function (req, res, next) {
 })
 
 app.use(function (err, req, res, next) {
-  if (err.message.includes('buffering timed out')) {
+  if (
+    err.message.includes('buffering timed out') ||
+    err.message.includes('bad auth')
+  ) {
     err.message = 'Server failed to connect to database'
+    err.status = 500
   }
 
   res.locals.message = err.message
