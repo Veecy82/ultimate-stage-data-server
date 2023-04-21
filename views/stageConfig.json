@@ -36,5 +36,9 @@
         "Unova Pokémon League": "unovaPokemonLeague",
         "Yoshi's Island": "yoshisStory",
         "Castle Siege": "castleSiege"
-    }
+    },
+    "characterSigPctThreshold": 0.01,
+    "characterSigQuantThreshold": 200,
+    "matchupSigPctThreshold": 0.01,
+    "matchupSigQuantThreshold": 50
 }

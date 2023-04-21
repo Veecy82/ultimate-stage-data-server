@@ -110,9 +110,9 @@ exports.getMatchupDataOnStage = async (char1Id, char2Id, stage) => {
 
 exports.getCharacterDataOnEachStage = async (charId) => {
   // percentage of total games required to be deemed significant (between 0 and 1)
-  const sigPctThreshold = 0.01
+  const sigPctThreshold = util.stages.characterSigPctThreshold
   // number of total games required to be deemed significant (positive integer)
-  const sigQuantThreshold = 200
+  const sigQuantThreshold = util.stages.characterSigQuantThreshold
 
   const [winData, lossData] = await Promise.all([
     Game.aggregate([
@@ -185,6 +185,89 @@ exports.getCharacterDataOnEachStage = async (charId) => {
     'lowDataStages',
   ]) {
     data[category].sort((a, b) => b.winPct - a.winPct)
+  }
+  return data
+}
+
+exports.getMatchupDataOnEachStage = async (char1Id, char2Id) => {
+  // percentage of total games required to be deemed significant (between 0 and 1)
+  const sigPctThreshold = util.stages.matchupSigPctThreshold
+  // number of total games required to be deemed significant (positive integer)
+  const sigQuantThreshold = util.stages.matchupSigQuantThreshold
+
+  const [char1Data, char2Data] = await Promise.all([
+    Game.aggregate([
+      { $match: { winChar: char1Id, loseChar: char2Id } },
+      { $group: { _id: '$stage', count: { $sum: 1 } } },
+    ]),
+    Game.aggregate([
+      { $match: { winChar: char2Id, loseChar: char1Id } },
+      { $group: { _id: '$stage', count: { $sum: 1 } } },
+    ]),
+  ])
+
+  let totalGames = 0
+  for (const obj of char1Data) {
+    totalGames += obj.count
+  }
+  for (const obj of char2Data) {
+    totalGames += obj.count
+  }
+
+  const data = {
+    starterStages: [],
+    counterpickStages: [],
+    retiredStages: [],
+    lowDataStages: [],
+  }
+
+  for (const category of [
+    'starterStages',
+    'counterpickStages',
+    'retiredStages',
+  ]) {
+    for (const stage of util.stages[category]) {
+      let char1Wins = 0
+      let char2Wins = 0
+      for (const obj of char1Data) {
+        if (obj._id === stage) {
+          char1Wins = obj.count
+          break
+        }
+      }
+      for (const obj of char2Data) {
+        if (obj._id === stage) {
+          char2Wins = obj.count
+          break
+        }
+      }
+      const obj = {
+        stage,
+        char1Wins,
+        char2Wins,
+        char1WinPct:
+          Math.round((10000 * char1Wins) / (char1Wins + char2Wins)) / 100 || 0,
+        char2WinPct:
+          Math.round((10000 * char2Wins) / (char1Wins + char2Wins)) / 100 || 0,
+      }
+      if (
+        obj.char1Wins + obj.char2Wins >= sigQuantThreshold ||
+        (obj.char1Wins + obj.char2Wins) / totalGames >= sigPctThreshold
+      ) {
+        data[category].push(obj)
+      } else {
+        data.lowDataStages.push(obj)
+      }
+    }
+  }
+
+  for (const category of [
+    'starterStages',
+    'counterpickStages',
+    'retiredStages',
+    'lowDataStages',
+  ]) {
+    data[category].sort((a, b) => b.char1WinPct - a.char1WinPct)
   }
   return data
 }

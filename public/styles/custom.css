@@ -15,6 +15,10 @@
     transition: 0.6s max-height;
 }
 
+.hamburger-open {
+    filter: invert(57%) sepia(77%) saturate(534%) hue-rotate(8deg) brightness(108%) contrast(94%);
+}
+
 .navmenu-open {
     max-height: calc(4.5rem + 12px);
 }

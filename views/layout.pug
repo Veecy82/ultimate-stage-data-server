@@ -37,7 +37,8 @@ html(lang='en')
             a.h-full.px-4.flex.items-center(href="/" + nav)
               span.uppercase.font-bold.decoration-2.underline-offset-4.text-white(class=`${route === nav ? "underline": ""}`)= nav
         li.hamburger.block(class="sm:hidden")
-          button.text-white Test
+          button.text-white
+            img.invert.w-8.h-8(src="/images/hamburger.svg" alt="navigate")
     div.navmenu.max-h-0.w-full.overflow-hidden.bg-zinc-700(class="sm:hidden")
       ul.flex.flex-col.items-end.p-2
         each nav in ["character", "matchup", "about"]

@@ -1,6 +1,8 @@
 const mongoTools = require('../database-scripts/utility/mongoTools')
 const char = require('../database-scripts/utility/charIdTools')
 
+const util = require('../database-scripts/utility/util')
+
 exports.matchup = async (req, res, next) => {
   const char1Id = char.internalToId[req.params.internal1.toLowerCase()]
   const char2Id = char.internalToId[req.params.internal2.toLowerCase()]
@@ -21,14 +23,38 @@ exports.matchup = async (req, res, next) => {
     return res.redirect('/')
   }
 
-  const data = await mongoTools.getMatchupDataOverall(char1Id, char2Id)
+  let overallData
+  try {
+    overallData = await mongoTools.getMatchupDataOverall(char1Id, char2Id)
+  } catch (e) {
+    return next(e)
+  }
+  const char1WinPct =
+    Math.round(
+      (10000 * overallData.char1Wins) /
+        (overallData.char1Wins + overallData.char2Wins)
+    ) / 100
+
+  let stageData
+  try {
+    stageData = await mongoTools.getMatchupDataOnEachStage(char1Id, char2Id)
+  } catch (e) {
+    return next(e)
+  }
 
   res.render('matchup', {
     route: 'matchup',
     name1: char.toName[char1Id],
     name2: char.toName[char2Id],
-    name1Wins: data.char1Wins,
-    name2Wins: data.char2Wins,
+    internal1: char.toInternal[char1Id],
+    internal2: char.toInternal[char2Id],
+    char1Wins: overallData.char1Wins,
+    char2Wins: overallData.char2Wins,
+    char1WinPct,
+    stageData,
+    stageBgs: util.stages.images,
+    sigPctThreshold: util.stages.matchupSigPctThreshold,
+    sigQuantThreshold: util.stages.matchupSigQuantThreshold,
   })
 }
 

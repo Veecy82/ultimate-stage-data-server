@@ -1,6 +1,71 @@
 extends layout 
 
+mixin card(stageBg, stageWinPct, stageWinGames, stageLosePct, stageLoseGames, allPct, stagePct)
+  .relative.w-full.max-w-lg.m-4.shadow-lg(class="2xl:max-w-2xl")
+    div.w-full.aspect-video.bg-cover.bg-center.contrast-50.grayscale-25.opacity-60(style=`background-image: url('/images/stages/${stageBg}.png')`)
+    div.absolute.top-0.bottom-0.left-0.bg-red-700.opacity-50(style=`right: ${100-stagePct}%`)
+    div.absolute.top-0.bottom-0.right-0.bg-blue-700.opacity-50(style=`left: ${(stageWinGames || stageLoseGames) ? stagePct : 100}%`)
+    div.absolute.w-6.h-full.top-0.cursor-pointer.tooltip.indicator(data-tooltip=`${name1} win % over all stages: ${allPct}%` class="-translate-x-1/2 before:content-[attr(data-tooltip)] before:absolute before:opacity-0 before:bg-slate-900 before:rounded-md before:text-white before:px-2 before:py-1 before:whitespace-pre before:left-1/2 before:-top-2 before:-translate-x-1/2 before:-translate-y-full" style=`left: ${allPct}%`)
+      div.absolute.w-2.h-2.indicator-top.border-transparent.border-t-zinc-600.indicator-arrow(class="left-1/2 -translate-x-1/2" style="top: -4px")
+      div.absolute.w-2.h-2.indicator-bottom.border-transparent.border-b-zinc-600.indicator-arrow(class="left-1/2 -translate-x-1/2" style="top: calc(100% - 20px)")
+      div.absolute.top-0.h-full.bg-zinc-600.indicator-bar(class="left-1/2 -translate-x-1/2 w-1.5")
+
+    .absolute.inset-0.pointer-events-none.flex
+      .basis-full.flex.flex-col.justify-center.items-center 
+        span.pointer-events-auto.text-xl.text-center.font-bold(class="sm:text-2xl") #{name1} 
+        span.pointer-events-auto.font-fjalla.text-3xl.font-bold(class="sm:text-6xl") #{stageWinPct}%
+        span.pointer-events-auto (#{stageWinGames} games)
+      .basis-full.flex.flex-col.justify-center.items-center
+        span.pointer-events-auto.text-xl.text-center.font-bold(class="sm:text-2xl") #{name2}
+        span.pointer-events-auto.font-fjalla.text-3xl.font-bold(class="sm:text-6xl") #{stageLosePct}%
+        span.pointer-events-auto (#{stageLoseGames} games)
+
+mixin thumbnailCard
+  div.relative.w-48.aspect-video.shadow-lg.mb-0.flex.flex-col(class="md:aspect-16-18 md:mb-8 md:w-full")
+    div.relative.flex-1
+      div.absolute.inset-0.bg-red-600.opacity-50
+      div.absolute.inset-0.bg-cover.bg.center(style=`background-image: url('/images/thumbnails/${internal1}.png')`)
+    div.relative.flex-1
+      div.absolute.inset-0.bg-blue-600.opacity-50
+      div.absolute.inset-0.bg-cover.bg.center(style=`background-image: url('/images/thumbnails/${internal2}.png')`)
+
+
 block content
-  h1 Stage data for #{name1} vs #{name2}
-  h4 Total wins for #{name1}: #{name1Wins}
-  h4 Total wins for #{name2}: #{name2Wins}
+  div.flex.flex-col(class="md:flex-row")
+    div.bg-zinc-400.overflow-hidden.flex.items-center.sticky.top-0.max-h-screen.shadow-2xl.z-10(class="md:w-48 md:flex-col lg:w-64")
+      +thumbnailCard
+      .hidden.font-fjalla.uppercase.px-4.py-1.bg-black.text-white.top-full.shadow-lg.whitespace-pre(class="md:block") #{name1} vs. #{name2}
+      div.flex-1.flex.flex-col.items-center.justify-center.whitespace-pre.px-2.py-1(class="md:justify-start")
+        div.font-bold Overall Data
+        div.font-fjalla.font-bold.text-3xl(class="md:text-2xl lg:text-3xl") #{char1WinPct}% - #{100-char1WinPct}%
+        div.text-sm #{char1Wins} - #{char2Wins} games
+    div.relative.py-4.flex.flex-col.items-center.flex-1
+      h4.font-fjalla.uppercase.text-4xl.font-bold.bg-black.text-white.px-8.py-2.pt-3.m-3.shadow-lg(class="sm:text-6xl") Starters
+      ul.flex.flex-row.flex-wrap.w-full.m-2.gap-4.px-6(class="2xl:px-12 2xl:gap-12")
+        each stage in stageData.starterStages
+          li.flex.flex-col.items-center(class="w-full xl:w-auto xl:flex-1 xl:basis-1/3")
+            h4.font-fjalla.text-2xl.font-bold.underline(class="sm:text-3xl")= stage.stage
+            +card(stageBgs[stage.stage], stage.char1WinPct, stage.char1Wins, stage.char2WinPct, stage.char2Wins, char1WinPct, stage.char1WinPct)
+      
+      h4.font-fjalla.uppercase.text-4xl.font-bold.bg-black.text-white.px-8.py-2.pt-3.m-3.shadow-lg(class="sm:text-6xl") Counterpicks
+      ul.flex.flex-row.flex-wrap.w-full.m-2.gap-4.px-6(class="2xl:px-12 2xl:gap-12")
+        each stage in stageData.counterpickStages
+          li.flex.flex-col.items-center(class="w-full xl:w-auto xl:flex-1 xl:basis-1/3")
+            h4.font-fjalla.text-2xl.font-bold.underline(class="sm:text-3xl")= stage.stage
+            +card(stageBgs[stage.stage], stage.char1WinPct, stage.char1Wins, stage.char2WinPct, stage.char2Wins, char1WinPct, stage.char1WinPct)
+
+      h4.font-fjalla.uppercase.text-4xl.font-bold.bg-black.text-white.px-8.py-2.pt-3.m-3.shadow-lg(class="sm:text-6xl") Retired 
+      ul.flex.flex-row.flex-wrap.w-full.m-2.gap-4.px-6(class="2xl:px-12 2xl:gap-12")
+        each stage in stageData.retiredStages
+          li.flex.flex-col.items-center(class="w-full xl:w-auto xl:flex-1 xl:basis-1/3")
+            h4.font-fjalla.text-2xl.font-bold.underline(class="sm:text-3xl")= stage.stage
+            +card(stageBgs[stage.stage], stage.char1WinPct, stage.char1Wins, stage.char2WinPct, stage.char2Wins, char1WinPct, stage.char1WinPct)
+
+      h4.font-fjalla.uppercase.text-4xl.font-bold.bg-black.text-white.px-8.py-2.pt-3.m-3.shadow-lg(class="sm:text-6xl") Low Data
+      ul.flex.flex-row.flex-wrap.w-full.m-2.gap-4.px-6(class="2xl:px-12 2xl:gap-12")
+        each stage in stageData.lowDataStages
+          li.flex.flex-col.items-center(class="w-full xl:w-auto xl:flex-1 xl:basis-1/3")
+            div.flex.items-center.gap-2
+              h4.font-fjalla.text-2xl.font-bold.underline(class="sm:text-3xl")= stage.stage
+              span.relative.text-xl.rounded-full.text-white.font-bold.bg-red-600.w-6.h-6.flex.justify-center.items-center.tooltip.cursor-default.select-none(data-tooltip=`Low data: <${sigQuantThreshold} games and \n <${sigPctThreshold * 100}% of ${name1} vs ${name2} games` class="before:content-[attr(data-tooltip)] before:absolute before:opacity-0 before:text-center before:bg-slate-900 before:rounded-md before:text-white before:px-2 before:py-1 before:whitespace-pre before:right-0 before:font-normal before:text-sm before:-top-2 before:-translate-y-full" style=`left: ${allPct}%`) !
+            +card(stageBgs[stage.stage], stage.char1WinPct, stage.char1Wins, stage.char2WinPct, stage.char2Wins, char1WinPct, stage.char1WinPct)

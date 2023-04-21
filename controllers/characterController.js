@@ -39,6 +39,8 @@ exports.character = async (req, res, next) => {
     winPct,
     stageData,
     stageBgs: util.stages.images,
+    sigPctThreshold: util.stages.characterSigPctThreshold,
+    sigQuantThreshold: util.stages.characterSigQuantThreshold,
   })
 }
 
