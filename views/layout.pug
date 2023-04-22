@@ -1,13 +1,15 @@
 mixin smashbuttonhref(text, href)
   a(href=href)
-    div.smash-button-border(class="p-1.5")
+    div.inline-block.smash-button-border(class="p-1.5")
       button.bg-black.text-white.uppercase.font-bold.px-3.py-1.flex.items-center.gap-1.whitespace-nowrap
         span #{text}
         span.chevron
 
-mixin smashbuttononclick(text, onclick)
-  div.p-1.bg-yellow-500
-    button.bg-white= text
+mixin smashbuttononclick(text, href)
+  a.smashButtonLink(href=href)
+    div.smashButton.inline-block.smash-button-border(class="p-1.5")
+      button.bg-black.text-white.uppercase.font-bold.px-3.py-1.flex.items-center.gap-1.whitespace-nowrap
+        span #{text}
 
 html(lang='en')
   head 
@@ -40,10 +42,10 @@ html(lang='en')
           button.text-white
             img.invert.w-8.h-8(src="/images/hamburger.svg" alt="navigate")
     div.navmenu.max-h-0.w-full.overflow-hidden.bg-zinc-700(class="sm:hidden")
-      ul.flex.flex-col.items-end.p-2
+      ul.flex.flex-col
         each nav in ["character", "matchup", "about"]
-          li
-            a(href="/" + nav)
-              span.text-white.uppercase.font-bold= nav
+          li.w-full(class="hover:bg-zinc-600")
+            a.block.w-full.h-full.p-4(href="/" + nav)
+              span.block.w-full.text-end.text-white.text-sm.uppercase.font-bold.decoration-2.underline-offset-4(class=`${route === nav ? "underline" : ""}`)= nav
     div.w-full
       block content

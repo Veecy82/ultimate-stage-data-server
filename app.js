@@ -48,6 +48,10 @@ app.use(function (err, req, res, next) {
     err.status = 500
   }
 
+  if (err.status === 404) {
+    err.message = `Could not find resource ${req.originalUrl}`
+  }
+
   res.locals.message = err.message
   res.locals.error = req.app.get('env') === 'development' ? err : {}
 

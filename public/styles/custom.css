@@ -20,7 +20,7 @@
 }
 
 .navmenu-open {
-    max-height: calc(4.5rem + 12px);
+    max-height: calc(3 * calc(3.25rem));
 }
 
 .smash-button-border:hover .chevron::before {
