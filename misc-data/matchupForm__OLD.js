@@ -1,4 +1,4 @@
-import namesToInternal from './namesToInternal.js'
+import namesToInternal from '../public/scripts/namesToInternal.js'
 
 const n = Object.keys(namesToInternal)
 n.sort()

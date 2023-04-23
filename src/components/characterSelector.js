@@ -1,7 +1,7 @@
 export default function CharacterSelector() {
   return (
     <div>
-      <span>Test</span>
+      <span>React is being rendered!</span>
     </div>
   )
 }

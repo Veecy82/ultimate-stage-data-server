@@ -6,7 +6,8 @@
     },
     "extends": [
         "standard",
-        "prettier"
+        "prettier",
+        "plugin:react/recommend"
     ],
     "overrides": [
     ],
