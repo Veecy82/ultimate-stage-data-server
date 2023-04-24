@@ -1,6 +1,6 @@
 /* updateTools.js
  *
- * A library of functions fo fetch new data from Start.gg and populate USD's database
+ * A library of functions for fetching new data from Start.gg and populating USD's database
  *
  * Functions may both query Start.gg's API and USD's database through Mongoose
  */
@@ -8,10 +8,29 @@ const mongoTools = require('./utility/mongoTools')
 const apiTools = require('./utility/apiTools')
 const util = require('./utility/util')
 
-exports.processTournamentSlug = async (slug) => {
+exports.getBlackListedEventsWithCache = async () => {
+  if (this.blacklistedEvents) {
+    return this.blacklistedEvents
+  }
+  exports.blacklistedEvents = await apiTools.getAllBlacklistedEvents()
+  return exports.blacklistedEvents
+}
+
+exports.processTournamentSlug = async (slug, onlyProcessIfOffline) => {
+  const blacklist = await this.getBlackListedEventsWithCache()
+  if (blacklist.includes(slug)) {
+    console.log(`Not processing blacklisted slug ${slug}`)
+    return
+  }
   if (await mongoTools.haveProcessedTournamentAlready(slug)) {
     console.log(`Tournament [${slug}] already processed`)
     return
+  }
+  if (onlyProcessIfOffline) {
+    if (await apiTools.getOnlineStatusOfEventSlug(slug)) {
+      console.log('Stopping processing, only checking offline tournaments')
+      return
+    }
   }
   if (!(await apiTools.eventSlugRepresentativeHasStageData(slug))) {
     await mongoTools.saveProcessedTournamentToDatabase(slug)
@@ -36,7 +55,8 @@ exports.processTournamentsInLongPeriod = async (unixStart, unixEnd) => {}
 
 exports.processTournamentsFromFileOfEventSize = async (
   pathToFile,
-  minEntrants
+  minEntrants,
+  onlyProcessIfOffline
 ) => {
   const tournaments = await util.getMapFromFiles([pathToFile])
   const filteredTournaments = util.filterMapByValue(
@@ -49,7 +69,7 @@ exports.processTournamentsFromFileOfEventSize = async (
       `Checking tournament... (${i++} of ${filteredTournaments.size})`
     )
     if (value >= minEntrants) {
-      await this.processTournamentSlug(key)
+      await this.processTournamentSlug(key, onlyProcessIfOffline)
     }
   }
 }

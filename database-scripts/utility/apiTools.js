@@ -12,6 +12,7 @@ const util = require('./util')
 const checkRepresentativeSet = require('../queries/checkRepresentativeSet')
 const findValidTournamentsInPeriod = require('../queries/findValidTournamentsInPeriod')
 const getSetDataFromEvent = require('../queries/getSetDataFromEvent')
+const getOnlineStatusOfEventSlug = require('../queries/getOnlineStatusOfEventSlug')
 const getEventSlugsFromTournamentSlug = require('../queries/getEventSlugsFromTournamentSlug')
 
 /** Given a Promise `prom`, return a Promise that resolves to the same value as `prom` after it resolves, or after n seconds, whichever is longer */
@@ -165,6 +166,24 @@ exports.getAllBlacklistedEvents = async () => {
     )
   }
   return blacklistedEvents
+}
+
+exports.getOnlineStatusOfEventSlug = async (slug) => {
+  const delayBetweenQueries = 1.3
+  const response = await this.makeGraphQLRequestStubborn(
+    getOnlineStatusOfEventSlug.query,
+    {
+      slug,
+    },
+    delayBetweenQueries,
+    `Checking online status of ${slug}...`
+  )
+  try {
+    return response.event.isOnline
+  } catch (e) {
+    console.log(`Got a bad response checking for online status of ${slug}`)
+    throw e
+  }
 }
 
 /** Asynchronously return a boolean indicating whether a representative set of the given event has stage data
