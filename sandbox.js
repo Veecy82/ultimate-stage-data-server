@@ -20,18 +20,14 @@ mongoConnect().catch((err) => console.log(err))
 const Game = require('./models/game')
 
 async function main() {
-  console.log(
-    await apiTools.getGamesFromVettedEvent(
-      'tournament/great-idea-not-part-2/event/ultimate-random-circuit-r2'
-    )
-  )
+  //console.log(await mongoTools.countRecordedGamesAcrossAllTournaments())
+
+  await updateTools.removeGamesFromBlacklistedTournaments()
 
   console.log(`Online games: ${await Game.countDocuments({ isOnline: true })}`)
   console.log(
     `Offline games: ${await Game.countDocuments({ isOnline: false })}`
   )
-
-  console.log(await mongoTools.getCharacterDataOnEachStage(1337))
 
   mongoose.disconnect()
 }

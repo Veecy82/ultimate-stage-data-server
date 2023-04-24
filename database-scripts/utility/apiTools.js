@@ -12,6 +12,7 @@ const util = require('./util')
 const checkRepresentativeSet = require('../queries/checkRepresentativeSet')
 const findValidTournamentsInPeriod = require('../queries/findValidTournamentsInPeriod')
 const getSetDataFromEvent = require('../queries/getSetDataFromEvent')
+const getEventSlugsFromTournamentSlug = require('../queries/getEventSlugsFromTournamentSlug')
 
 /** Given a Promise `prom`, return a Promise that resolves to the same value as `prom` after it resolves, or after n seconds, whichever is longer */
 exports.stallPromise = async (prom, n) => {
@@ -128,6 +129,42 @@ exports.makeGraphQLRequestStubborn = async (
     delayBetweenQueries,
     logMessage
   )
+}
+
+/** Asynchronously return an array of strings of slugs of events at a given tournament slug */
+exports.getEventSlugsFromTournamentSlug = async (slug) => {
+  const delayBetweenQueries = 1.3
+  const response = await this.makeGraphQLRequestStubborn(
+    getEventSlugsFromTournamentSlug.query,
+    {
+      slug,
+    },
+    delayBetweenQueries,
+    `Getting events at tournament ${slug}...`
+  )
+  try {
+    const out = []
+    for (const obj of response.tournament.events) {
+      out.push(obj.slug)
+    }
+    return out
+  } catch (e) {
+    console.log(`Could not find events at tournament ${slug}`)
+    throw e
+  }
+}
+
+exports.getAllBlacklistedEvents = async () => {
+  const tournaments = await util.getArrayFromFile(
+    './database-scripts/blacklistedTournaments.json'
+  )
+  let blacklistedEvents = []
+  for (const tournament of tournaments) {
+    blacklistedEvents = blacklistedEvents.concat(
+      await this.getEventSlugsFromTournamentSlug(tournament)
+    )
+  }
+  return blacklistedEvents
 }
 
 /** Asynchronously return a boolean indicating whether a representative set of the given event has stage data

@@ -271,3 +271,57 @@ exports.getMatchupDataOnEachStage = async (char1Id, char2Id) => {
   }
   return data
 }
+
+exports.countRecordedGamesAtEvent = async (slug) => {
+  return await Game.countDocuments({ slug })
+}
+
+exports.countRecordedGamesAcrossAllTournaments = async (offlineOnly) => {
+  const pipeline = []
+  if (offlineOnly) {
+    pipeline.push({ $match: { isOnline: false } })
+  }
+  pipeline.push({ $group: { _id: '$slug', count: { $sum: 1 } } })
+  const result = await Game.aggregate(pipeline)
+
+  const tournaments = {}
+  for (const eventObj of result) {
+    const spl = eventObj._id.split('/')
+    const tournamentSlug = spl[0] + '/' + spl[1]
+    if (!tournaments[tournamentSlug]) {
+      tournaments[tournamentSlug] = eventObj.count
+    } else {
+      tournaments[tournamentSlug] += eventObj.count
+    }
+  }
+  const unsortedTournaments = []
+  for (const tournament in tournaments) {
+    unsortedTournaments.push({
+      slug: tournament,
+      count: tournaments[tournament],
+    })
+  }
+  const sortedTournaments = unsortedTournaments.sort(
+    (a, b) => b.count - a.count
+  )
+
+  return unsortedTournaments
+}
+
+exports.removeGamesWithEventSlug = async (slug) => {
+  try {
+    console.log(`Trying to delete games from event ${slug}`)
+    const response = await Game.deleteMany({ slug })
+    if (response.deletedCount) {
+      if (response.deletedCount > 0) {
+        console.log(
+          `Deleted ${response.deletedCount} games from blacklisted event`
+        )
+        return response.deletedCount
+      }
+    }
+    return 0
+  } catch (e) {
+    console.log(`A problem occurred when trying to remove games from ${slug}`)
+  }
+}

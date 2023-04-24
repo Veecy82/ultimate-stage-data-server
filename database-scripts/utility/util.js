@@ -114,3 +114,12 @@ exports.filterMapByValue = (map, callbackFn) => {
   }
   return out
 }
+
+exports.getArrayFromFile = async (pathToFile) => {
+  try {
+    const rawData = await fs.readFile(pathToFile)
+    return JSON.parse(rawData)
+  } catch (e) {
+    throw e
+  }
+}

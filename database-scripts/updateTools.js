@@ -57,3 +57,13 @@ exports.processTournamentsFromFileOfEventSize = async (
 exports.processTournamentsFromFile = async (pathToFile) => {
   await this.processTournamentsFromFileOfEventSize(pathToFile, 0)
 }
+
+exports.removeGamesFromBlacklistedTournaments = async () => {
+  const blacklistedEvents = await apiTools.getAllBlacklistedEvents()
+
+  let deletedCount = 0
+  for (const event of blacklistedEvents) {
+    deletedCount += await mongoTools.removeGamesWithEventSlug(event)
+  }
+  console.log(`Deleted ${deletedCount} total games`)
+}
