@@ -442,3 +442,11 @@ for (const obj of data) {
 }
 
 export default namesToInternal
+
+export function namesToInternalCaseInsensitive(name) {
+  for (const n in namesToInternal) {
+    if (n.toLowerCase() === name.toLowerCase()) {
+      return namesToInternal[n]
+    }
+  }
+}

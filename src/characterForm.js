@@ -1,8 +1,8 @@
-import CharacterSelector from './components/characterSelector'
+import CharacterFormInput from './components/CharacterFormInput'
 import { createRoot } from 'react-dom/client'
 
-console.log(`Hello ${'world'}`)
+document.body.style.overflow = 'overlay'
 
-const domNode = document.getElementById('nameInputArea')
+const domNode = document.getElementById('inputArea')
 const root = createRoot(domNode)
-root.render(<CharacterSelector />)
+root.render(<CharacterFormInput />)

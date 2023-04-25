@@ -20,16 +20,16 @@ mongoConnect().catch((err) => console.log(err))
 const Game = require('./models/game')
 
 async function main() {
-  await updateTools.processTournamentSlug(
-    'tournament/great-idea-not-part-2/event/ultimate-random-luck-qualifier'
+  await updateTools.processTournamentsFromFileOfEventSize(
+    './misc-data/event-entrant-pairs/2019.json',
+    32,
+    true
   )
-
-  /*await updateTools.removeGamesFromBlacklistedTournaments()
 
   console.log(`Online games: ${await Game.countDocuments({ isOnline: true })}`)
   console.log(
     `Offline games: ${await Game.countDocuments({ isOnline: false })}`
-  )*/
+  )
 
   mongoose.disconnect()
 }

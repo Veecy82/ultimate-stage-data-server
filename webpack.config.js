@@ -5,7 +5,7 @@ module.exports = {
     characterForm: './src/characterForm.js',
     matchupForm: './src/matchupForm.js',
   },
-  mode: 'production',
+  mode: 'development',
   output: {
     filename: '[name].bundle.js',
     path: path.resolve(__dirname, 'public', 'react-scripts'),

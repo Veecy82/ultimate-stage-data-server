@@ -91,10 +91,19 @@ exports.example4 = async () => {
   console.log(`${games.length} games with data found`)
 }
 
-// Populate database with all games from events from file `2023.json`
+// Populate database with all games from events from file `2023.json` with at least 100 entrants
 exports.example5 = async () => {
   await updateTools.processTournamentsFromFileOfEventSize(
     './misc-data/event-entrant-pairs/2023.json',
     100
+  )
+}
+
+// Populate database with all OFFLINE games from events from file `2018.json` with at least 32 entrants
+exports.example6 = async () => {
+  await updateTools.processTournamentsFromFileOfEventSize(
+    './misc-data/event-entrant-pairs/2018.json',
+    32,
+    true
   )
 }
