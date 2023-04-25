@@ -30,7 +30,8 @@ block content
       +thumbnailCard
       div.flex-1.flex.flex-col.items-center.justify-center.whitespace-pre.px-2.py-1(class="md:justify-start")
         div.flex.gap-1.flex-row.items-center
-          span.font-bold Overall Win-Loss
+          span.font-bold.hidden(class="md:inline lg:hidden") Win-Loss
+          span.font-bold(class="md:hidden lg:inline") Overall Win-Loss
           span.text-xs.capitalize.text-zinc-800 (#{options.only === "BOTH" ? "Online & Offline" : options.only + " only"})
         div.font-fjalla.font-bold.text-3xl(class="md:text-2xl lg:text-3xl") #{winPct}% - #{100-winPct}%
         div.text-sm #{wins.toLocaleString()} - #{losses.toLocaleString()} games

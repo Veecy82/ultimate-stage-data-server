@@ -25,7 +25,7 @@ html(lang='en')
 
     script(src="/scripts/hamburger.js" defer) 
 
-  body.flex.flex-col.items-center.overflow-x-hidden
+  body.flex.flex-col.items-center.overflow-x-hidden.min-h-screen
     div.flex.flex-row.gap-4.items-center.justify-between.w-full.bg-black.px-4.shadow-lg
       a.text-xl.font-bold.whitespace-pre.font-fjalla(class="xs:text-3xl" href="/")
         h1.py-4
@@ -47,5 +47,5 @@ html(lang='en')
           li.w-full(class="hover:bg-zinc-600")
             a.block.w-full.h-full.p-4(href="/" + nav)
               span.block.w-full.text-end.text-white.text-sm.uppercase.font-bold.decoration-2.underline-offset-4(class=`${route === nav ? "underline" : ""}`)= nav
-    div.w-full
+    div.w-full.flex-1.relative
       block content

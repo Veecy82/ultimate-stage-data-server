@@ -5,6 +5,8 @@
     background-image: linear-gradient(to right, var(--border-color-1), var(--border-color-2), var(--border-color-1), var(--border-color-2), var(--border-color-1));
     background-size: 400% 100%;
     animation: 3s linear infinite smash-button-background;
+
+    box-shadow: 0 3px 10px 2px rgb(0 0 0 / 20%);
 }
 
 .smash-button-border:hover button {
@@ -66,6 +68,49 @@
     background-color: black;
 }
 
+.index-effect-container {
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(to left, red, blue);
+    animation: 32s infinite linear index-effect
+}
+
+.index-effect-item {
+    height: 100%;
+}
+
+.index-effect-item-1 {
+    background-image: url("/images/stages/battlefield.png");
+}
+
+.index-effect-item-2 {
+    background-image: url("/images/stages/hollowBastion.png");
+}
+
+.index-effect-item-3 {
+    background-image: url("/images/stages/battlefield.png");
+}
+
+.index-effect-item-4 {
+    background-image: url("/images/stages/hollowBastion.png");
+}
+
+.index-effect-item-alt-1 {
+    background-image: url("/images/stages/townAndCity.png");
+}
+
+.index-effect-item-alt-2 {
+    background-image: url("/images/stages/smashville.png");
+}
+
+.index-effect-item-alt-3 {
+    background-image: url("/images/stages/yoshisStory.png");
+}
+
+.index-effect-item-alt-4 {
+    background-image: url("/images/stages/pokemonStadium2.png");
+}
+
 /* chevron css by https://codepen.io/stepher/pen/yLOaEOP */
 .chevron::before {
     border-color: white;
@@ -78,6 +123,16 @@
 	vertical-align: top;
 	width: 0.45em;
     transform: rotate(45deg);
+}
+
+@keyframes index-effect {
+    0% {
+        left: -100%;
+    }
+
+    100% {
+        left: 0;
+    }
 }
 
 @keyframes smash-button-background {

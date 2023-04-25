@@ -1,7 +1,12 @@
 extends layout 
 
 block content
-  div.flex.flex-col.items-center.py-16.px-4
+  script(src="/scripts/indexEffect.js" defer) 
+  div.index-effect-container.absolute.flex.flex-row(class="-z-10")
+    each i in ["1", "2", "3", "4"]
+      div.index-effect-item.flex-1.bg-cover.bg-center.relative(class=`index-effect-item-${i}`)
+        div.absolute.inset-0.bg-cover.bg-center(class=`index-effect-item-alt-${i}`)
+  div.relative.flex.flex-col.items-center.py-16.px-4.flex-1
     h1.text-4xl.font-fjalla.text-center= "Welcome to Ultimate Stage Data!"
     h2.text-lg Number of games in data set: #{numGames.toLocaleString()}
     h3.text-base Number of tournaments inspected: #{numTournaments.toLocaleString()}
