@@ -12,9 +12,19 @@ exports.character = async (req, res, next) => {
     return next(err)
   }
 
+  let options = null
+  if (req.query.only) {
+    if (req.query.only === 'online') {
+      options = { isOnline: true }
+    }
+    if (req.query.only === 'offline') {
+      options = { isOnline: false }
+    }
+  }
+
   let overallData
   try {
-    overallData = await mongoTools.getCharacterDataOverall(charId)
+    overallData = await mongoTools.getCharacterDataOverall(charId, options)
   } catch (e) {
     return next(e)
   }
@@ -25,9 +35,14 @@ exports.character = async (req, res, next) => {
 
   let stageData
   try {
-    stageData = await mongoTools.getCharacterDataOnEachStage(charId)
+    stageData = await mongoTools.getCharacterDataOnEachStage(charId, options)
   } catch (e) {
     return next(e)
+  }
+
+  let sigQuantThreshold = util.stages.characterSigQuantThreshold
+  if (options && !options.isOnline) {
+    sigQuantThreshold *= util.stages.offlineSigQuantMultiplier
   }
 
   res.render('character', {
@@ -40,7 +55,10 @@ exports.character = async (req, res, next) => {
     stageData,
     stageBgs: util.stages.images,
     sigPctThreshold: util.stages.characterSigPctThreshold,
-    sigQuantThreshold: util.stages.characterSigQuantThreshold,
+    sigQuantThreshold,
+    options: {
+      only: req.query.only ? req.query.only : 'BOTH',
+    },
   })
 }
 

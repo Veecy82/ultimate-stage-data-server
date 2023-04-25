@@ -40,5 +40,6 @@
     "characterSigPctThreshold": 0.01,
     "characterSigQuantThreshold": 200,
     "matchupSigPctThreshold": 0.01,
-    "matchupSigQuantThreshold": 50
+    "matchupSigQuantThreshold": 50,
+    "offlineSigQuantMultiplier": 0.1
 }

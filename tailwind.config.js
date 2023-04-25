@@ -3,6 +3,9 @@ module.exports = {
   content: ['./views/*.pug', './src/components/*.js', './src/*.js'],
   theme: {
     extend: {
+      colors: {
+        'zinc-450': '#898992',
+      },
       fontFamily: {
         sans: ['Roboto', 'sans-serif'],
         fjalla: ['"Fjalla One"', 'sans-serif'],

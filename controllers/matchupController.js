@@ -23,9 +23,23 @@ exports.matchup = async (req, res, next) => {
     return res.redirect('/')
   }
 
+  let options = null
+  if (req.query.only) {
+    if (req.query.only === 'online') {
+      options = { isOnline: true }
+    }
+    if (req.query.only === 'offline') {
+      options = { isOnline: false }
+    }
+  }
+
   let overallData
   try {
-    overallData = await mongoTools.getMatchupDataOverall(char1Id, char2Id)
+    overallData = await mongoTools.getMatchupDataOverall(
+      char1Id,
+      char2Id,
+      options
+    )
   } catch (e) {
     return next(e)
   }
@@ -33,13 +47,24 @@ exports.matchup = async (req, res, next) => {
     Math.round(
       (10000 * overallData.char1Wins) /
         (overallData.char1Wins + overallData.char2Wins)
-    ) / 100
+    ) / 100 || 0
+  const char2WinPct =
+    overallData.char1Wins + overallData.char2Wins > 0 ? 100 - char1WinPct : 0
 
   let stageData
   try {
-    stageData = await mongoTools.getMatchupDataOnEachStage(char1Id, char2Id)
+    stageData = await mongoTools.getMatchupDataOnEachStage(
+      char1Id,
+      char2Id,
+      options
+    )
   } catch (e) {
     return next(e)
+  }
+
+  let sigQuantThreshold = util.stages.matchupSigQuantThreshold
+  if (options && !options.isOnline) {
+    sigQuantThreshold *= util.stages.offlineSigQuantMultiplier
   }
 
   res.render('matchup', {
@@ -51,10 +76,14 @@ exports.matchup = async (req, res, next) => {
     char1Wins: overallData.char1Wins,
     char2Wins: overallData.char2Wins,
     char1WinPct,
+    char2WinPct,
     stageData,
     stageBgs: util.stages.images,
     sigPctThreshold: util.stages.matchupSigPctThreshold,
-    sigQuantThreshold: util.stages.matchupSigQuantThreshold,
+    sigQuantThreshold,
+    options: {
+      only: req.query.only ? req.query.only : 'BOTH',
+    },
   })
 }
 

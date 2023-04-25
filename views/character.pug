@@ -26,10 +26,12 @@ mixin thumbnailCard
 
 block content
   div.flex.flex-col(class="md:flex-row")
-    div.bg-zinc-400.overflow-hidden.flex.sticky.top-0.max-h-screen.shadow-2xl.z-10(class="md:w-48 md:flex-col lg:w-64")
+    div.bg-zinc-450.overflow-hidden.flex.items-center.sticky.top-0.max-h-screen.shadow-2xl.z-10(class="md:w-48 md:flex-col lg:w-64")
       +thumbnailCard
       div.flex-1.flex.flex-col.items-center.justify-center.whitespace-pre.px-2.py-1(class="md:justify-start")
-        div.font-bold Overall Win - Loss
+        div.flex.gap-1.flex-row.items-center
+          span.font-bold Overall Win-Loss
+          span.text-xs.capitalize.text-zinc-800 (#{options.only === "BOTH" ? "Online & Offline" : options.only + " only"})
         div.font-fjalla.font-bold.text-3xl(class="md:text-2xl lg:text-3xl") #{winPct}% - #{100-winPct}%
         div.text-sm #{wins.toLocaleString()} - #{losses.toLocaleString()} games
     div.relative.py-4.flex.flex-col.items-center.flex-1

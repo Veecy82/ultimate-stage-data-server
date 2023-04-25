@@ -76,23 +76,42 @@ exports.getTotalTournaments = async () => {
   return await ProcessedTournament.countDocuments({})
 }
 
-exports.getCharacterDataOverall = async (charId) => {
+exports.getCharacterDataOverall = async (charId, options) => {
+  const winCharFilter = { winChar: charId }
+  const loseCharFilter = { loseChar: charId }
+  if (options) {
+    if (typeof options === 'object' && typeof options.isOnline === 'boolean') {
+      winCharFilter.isOnline = options.isOnline
+      loseCharFilter.isOnline = options.isOnline
+    }
+  }
   const [wins, losses] = await Promise.all([
-    Game.countDocuments({ winChar: charId }),
-    Game.countDocuments({ loseChar: charId }),
+    Game.countDocuments(winCharFilter),
+    Game.countDocuments(loseCharFilter),
   ])
   return { wins, losses }
 }
 
-exports.getMatchupDataOverall = async (char1Id, char2Id) => {
+exports.getMatchupDataOverall = async (char1Id, char2Id, options) => {
+  const char1Filter = { winChar: char1Id, loseChar: char2Id }
+  const char2Filter = { winChar: char2Id, loseChar: char1Id }
+  if (options) {
+    if (typeof options === 'object' && typeof options.isOnline === 'boolean') {
+      char1Filter.isOnline = options.isOnline
+      char2Filter.isOnline = options.isOnline
+    }
+  }
   const [char1Wins, char2Wins] = await Promise.all([
-    Game.countDocuments({ winChar: char1Id, loseChar: char2Id }),
-    Game.countDocuments({ winChar: char2Id, loseChar: char1Id }),
+    Game.countDocuments(char1Filter),
+    Game.countDocuments(char2Filter),
   ])
   return { char1Wins, char2Wins }
 }
 
-exports.getCharacterDataOnStage = async (charId, stage) => {
+// i believe these two functions are unused but im only commenting them in case something breaks
+// and it ends up that they actually were being used
+
+/* exports.getCharacterDataOnStage = async (charId, stage) => {
   const [wins, losses] = await Promise.all([
     Game.countDocuments({ winChar: charId, stage }),
     Game.countDocuments({ loseChar: charId, stage }),
@@ -106,21 +125,33 @@ exports.getMatchupDataOnStage = async (char1Id, char2Id, stage) => {
     Game.countDocuments({ winChar: char2Id, loseChar: char1Id, stage }),
   ])
   return { char1Wins, char2Wins }
-}
+} */
 
-exports.getCharacterDataOnEachStage = async (charId) => {
+exports.getCharacterDataOnEachStage = async (charId, options) => {
   // percentage of total games required to be deemed significant (between 0 and 1)
   const sigPctThreshold = util.stages.characterSigPctThreshold
   // number of total games required to be deemed significant (positive integer)
-  const sigQuantThreshold = util.stages.characterSigQuantThreshold
+  let sigQuantThreshold = util.stages.characterSigQuantThreshold
+
+  const winCharFilter = { winChar: charId }
+  const loseCharFilter = { loseChar: charId }
+  if (options) {
+    if (typeof options === 'object' && typeof options.isOnline === 'boolean') {
+      winCharFilter.isOnline = options.isOnline
+      loseCharFilter.isOnline = options.isOnline
+      if (!options.isOnline) {
+        sigQuantThreshold *= util.stages.offlineSigQuantMultiplier
+      }
+    }
+  }
 
   const [winData, lossData] = await Promise.all([
     Game.aggregate([
-      { $match: { winChar: charId } },
+      { $match: winCharFilter },
       { $group: { _id: '$stage', count: { $sum: 1 } } },
     ]),
     Game.aggregate([
-      { $match: { loseChar: charId } },
+      { $match: loseCharFilter },
       { $group: { _id: '$stage', count: { $sum: 1 } } },
     ]),
   ])
@@ -189,19 +220,31 @@ exports.getCharacterDataOnEachStage = async (charId) => {
   return data
 }
 
-exports.getMatchupDataOnEachStage = async (char1Id, char2Id) => {
+exports.getMatchupDataOnEachStage = async (char1Id, char2Id, options) => {
   // percentage of total games required to be deemed significant (between 0 and 1)
   const sigPctThreshold = util.stages.matchupSigPctThreshold
   // number of total games required to be deemed significant (positive integer)
-  const sigQuantThreshold = util.stages.matchupSigQuantThreshold
+  let sigQuantThreshold = util.stages.matchupSigQuantThreshold
+
+  const char1Filter = { winChar: char1Id, loseChar: char2Id }
+  const char2Filter = { winChar: char2Id, loseChar: char1Id }
+  if (options) {
+    if (typeof options === 'object' && typeof options.isOnline === 'boolean') {
+      char1Filter.isOnline = options.isOnline
+      char2Filter.isOnline = options.isOnline
+      if (!options.isOnline) {
+        sigQuantThreshold *= util.stages.offlineSigQuantMultiplier
+      }
+    }
+  }
 
   const [char1Data, char2Data] = await Promise.all([
     Game.aggregate([
-      { $match: { winChar: char1Id, loseChar: char2Id } },
+      { $match: char1Filter },
       { $group: { _id: '$stage', count: { $sum: 1 } } },
     ]),
     Game.aggregate([
-      { $match: { winChar: char2Id, loseChar: char1Id } },
+      { $match: char2Filter },
       { $group: { _id: '$stage', count: { $sum: 1 } } },
     ]),
   ])

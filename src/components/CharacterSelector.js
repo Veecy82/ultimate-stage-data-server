@@ -57,6 +57,7 @@ export default function CharacterSelector({ value, setValue, id }) {
             e.target.blur()
           }
         }}
+        autoComplete="off"
         required
         value={value}
         type="text"
@@ -69,7 +70,7 @@ export default function CharacterSelector({ value, setValue, id }) {
               <div
                 key={idx}
                 className={`w-full flex items-center p-2 font-bold uppercase ${
-                  idx === currentIndex ? 'bg-zinc-200' : 'bg-zinc-100'
+                  idx === currentIndex ? 'bg-zinc-300' : 'bg-zinc-200'
                 } cursor-pointer flex-1 gap-2`}
                 onMouseEnter={() => {
                   setCurrentIndex(idx)
