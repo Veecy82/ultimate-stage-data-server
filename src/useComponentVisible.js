@@ -5,10 +5,12 @@ import { useState, useEffect, useRef } from 'react'
 
 export default function useComponentVisible(initialIsVisible) {
   const [isComponentVisible, setIsComponentVisible] = useState(initialIsVisible)
-  const ref = useRef(null)
+  const containerRef = useRef(null)
+  const inputRef = useRef(null)
 
   const handleClickOutside = (event) => {
-    if (ref.current && !ref.current.contains(event.target)) {
+    console.log(event.target)
+    if (containerRef.current && !containerRef.current.contains(event.target)) {
       setIsComponentVisible(false)
     } else {
       setIsComponentVisible(true)
@@ -16,11 +18,16 @@ export default function useComponentVisible(initialIsVisible) {
   }
 
   useEffect(() => {
-    document.addEventListener('click', handleClickOutside, true)
+    document.addEventListener('mousedown', handleClickOutside, true)
     return () => {
       document.removeEventListener('click', handleClickOutside, true)
     }
   }, [])
 
-  return { ref, isComponentVisible, setIsComponentVisible }
+  return {
+    containerRef,
+    inputRef,
+    isComponentVisible,
+    setIsComponentVisible,
+  }
 }

@@ -10,7 +10,7 @@ charNames.sort()
 
 export default function CharacterSelector({ value, setValue, id }) {
   const [currentIndex, setCurrentIndex] = useState(-1)
-  const { ref, isComponentVisible, setIsComponentVisible } =
+  const { containerRef, inputRef, isComponentVisible, setIsComponentVisible } =
     useComponentVisible(false)
 
   const getFilteredChars = () => {
@@ -24,7 +24,7 @@ export default function CharacterSelector({ value, setValue, id }) {
   }, [isComponentVisible])
 
   return (
-    <div className="relative" ref={ref}>
+    <div className="relative" ref={containerRef}>
       <input
         id={id}
         onInput={(e) => {
