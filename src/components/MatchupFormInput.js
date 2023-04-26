@@ -51,7 +51,7 @@ export default function MatchupFormInput() {
                     opts = '?only=offline'
                   }
                   if (!offlineChecked) {
-                    opts = '?only=offline'
+                    opts = '?only=online'
                   }
                   window.location.href = `/matchup/${namesToInternalCaseInsensitive(
                     name1

@@ -42,7 +42,7 @@ export default function CharacterFormInput() {
                 opts = '?only=offline'
               }
               if (!offlineChecked) {
-                opts = '?only=offline'
+                opts = '?only=online'
               }
               window.location.href = `/character/${namesToInternalCaseInsensitive(
                 name
