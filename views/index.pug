@@ -3,15 +3,16 @@ extends layout
 block content
   script(src="/scripts/indexEffect.js" defer) 
   div.absolute.w-full.h-full.overflow-hidden
-    div.index-effect-container.brightness-125.bg-zinc-400.absolute.flex.flex-row(class="-z-10")
+    div.opacity-50.index-effect-container.brightness-125.bg-zinc-200.absolute.flex.flex-row(class="-z-10")
       div.absolute.inset-0.flex.flex-row.index-effect-inner-container
         each i in ["1", "2", "3", "4", "1", "2", "3"]
           div.opacity-70.grayscale-25.contrast-50.index-effect-item.flex-1.bg-cover.bg-center.relative(class=`index-effect-item-${i}`)
             div.index-effect-item-alt.absolute.bg-cover.bg-center.inset-0(class=`index-effect-item-alt-${i}`)
-  div.relative.flex.flex-col.items-center.py-16.px-4.flex-1
-    h1.text-4xl.font-fjalla.font-bold.text-center= "Welcome to Ultimate Stage Data!"
-    h2.text-lg Number of games in data set: #{numGames.toLocaleString()}
-    h3.text-base Number of tournaments inspected: #{numTournaments.toLocaleString()}
-    div.flex.flex-col.gap-2.items-center(class="md:flex-row md:gap-4")
-      +smashbuttonhref("Stage Data by Character", "/character")
-      +smashbuttonhref("Stage Data by Matchup", "/matchup")
+  .flex.justify-center.px-6.py-16(class="sm:p-16")
+    div.relative.w-full(class="sm:max-w-xl")
+      div.w-full.relative.flex.flex-col.items-center.flex-1
+        h1.text-4xl.font-fjalla.font-bold.text-center= "Welcome to Ultimate Stage Data!"
+        h2.text-lg.font-bold.text-center.py-4 Explore stage-dependent statistics for any character or matchup from a dataset of #{numGames.toLocaleString()} tournament matches.
+        div.flex.flex-col.gap-1.items-center(class="md:flex-row md:gap-4")
+          +smashbuttonhref("Stage Data by Character", "/character")
+          +smashbuttonhref("Stage Data by Matchup", "/matchup")
