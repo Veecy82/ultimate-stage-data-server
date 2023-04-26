@@ -20,12 +20,7 @@ mongoConnect().catch((err) => console.log(err))
 const Game = require('./models/game')
 
 async function main() {
-  await updateTools.processTournamentsFromFileOfEventSize(
-    './misc-data/event-entrant-pairs/2023.json',
-    32,
-    true
-  )
-  // console.log(await mongoTools.countRecordedGamesAcrossAllTournaments(true))
+  console.log(await mongoTools.countRecordedGamesAcrossAllTournaments(true))
 
   console.log(`Online games: ${await Game.countDocuments({ isOnline: true })}`)
   console.log(

@@ -3,12 +3,13 @@ extends layout
 block content
   script(src="/scripts/indexEffect.js" defer) 
   div.absolute.w-full.h-full.overflow-hidden
-    div.index-effect-container.absolute.flex.flex-row(class="-z-10")
-      each i in ["1", "2", "3", "4", "5", "3", "1", "2"]
-        div.opacity-70.grayscale-25.contrast-50.index-effect-item.flex-1.bg-cover.bg-center.relative(class=`index-effect-item-${i}`)
-          div.index-effect-item-alt.absolute.inset-0.bg-cover.bg-center(class=`index-effect-item-alt-${i}`)
+    div.index-effect-container.brightness-125.bg-zinc-400.absolute.flex.flex-row(class="-z-10")
+      div.absolute.inset-0.flex.flex-row.index-effect-inner-container
+        each i in ["1", "2", "3", "4", "1", "2", "3"]
+          div.opacity-70.grayscale-25.contrast-50.index-effect-item.flex-1.bg-cover.bg-center.relative(class=`index-effect-item-${i}`)
+            div.index-effect-item-alt.absolute.bg-cover.bg-center.inset-0(class=`index-effect-item-alt-${i}`)
   div.relative.flex.flex-col.items-center.py-16.px-4.flex-1
-    h1.text-4xl.font-fjalla.text-center= "Welcome to Ultimate Stage Data!"
+    h1.text-4xl.font-fjalla.font-bold.text-center= "Welcome to Ultimate Stage Data!"
     h2.text-lg Number of games in data set: #{numGames.toLocaleString()}
     h3.text-base Number of tournaments inspected: #{numTournaments.toLocaleString()}
     div.flex.flex-col.gap-2.items-center(class="md:flex-row md:gap-4")

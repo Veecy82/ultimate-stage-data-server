@@ -69,9 +69,13 @@
 }
 
 .index-effect-container {
-    width: 400%;
+    width: 350%;
     height: 100%;
-    animation: 80s infinite linear index-effect
+    animation: 40s infinite linear index-effect
+}
+
+.index-effect-inner-container {
+    transition: transform ease-out 500ms;
 }
 
 .index-effect-item {
@@ -102,10 +106,6 @@
     background-image: url("/images/stages/kalosPokemonLeague.jpg");
 }
 
-.index-effect-item-5 {
-    background-image: url("/images/stages/lylatCruise.jpg");
-}
-
 .index-effect-item-alt-1 {
     background-image: url("/images/stages/northernCave.jpg");
 }
@@ -120,10 +120,6 @@
 
 .index-effect-item-alt-4 {
     background-image: url("/images/stages/townAndCity.jpg");
-}
-
-.index-effect-item-alt-5 {
-    background-image: url("/images/stages/yoshisStory.jpg");
 }
 
 /* chevron css by https://codepen.io/stepher/pen/yLOaEOP */
@@ -142,11 +138,11 @@
 
 @keyframes index-effect {
     0% {
-        left: -300%;
+        transform: translateX(calc(-900% / 14));
     }
 
     100% {
-        left: 0;
+        transform: translateX(calc(-100% / 14))
     }
 }
 
