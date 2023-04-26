@@ -91,6 +91,7 @@ exports.matchup = async (req, res, next) => {
 
 exports.matchupForm = async (req, res, next) => {
   res.render('matchupForm', {
+    title: 'Stage Data by Matchup',
     route: 'matchup',
   })
 }

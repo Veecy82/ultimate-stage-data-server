@@ -66,6 +66,7 @@ exports.character = async (req, res, next) => {
 
 exports.characterForm = async (req, res, next) => {
   res.render('characterForm', {
+    title: 'Stage Data by Character',
     route: 'character',
   })
 }

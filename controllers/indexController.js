@@ -8,5 +8,5 @@ exports.index = async (req, res, next) => {
     return next(e)
   }
 
-  res.render('index', { numGames: data[0] })
+  res.render('index', { title: 'Ultimate Stage Data', numGames: data[0] })
 }
