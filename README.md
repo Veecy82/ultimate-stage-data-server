@@ -1,7 +1,7 @@
 # ultimate-stage-data-server
 
-This project is intended to serve a web application giving tournament statistics of character win rates on stages in Smash  Ultimate.
+Live: https://ultimatestagedata.com
 
-All tournaments with at least 100 entrants since the release of the game have been processed, and the server is currently in development.
+A web application serving stage-dependent statistics of character and matchup win rates from Smash Ultimate tournaments.
 
-Sets are queried from [start.gg's GraphQL API](https://developer.start.gg/docs/intro) and processed by the server. Data is updated on the server-side weekly.
+Sets are queried from [start.gg's GraphQL API](https://developer.start.gg/docs/intro) and processed by the server. Data is planned to be updated on the server-side weekly.
