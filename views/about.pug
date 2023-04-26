@@ -1,4 +1,13 @@
 extends layout
 
+mixin infoCard(summary, description)
+  details.w-full.bg-zinc-200
+    summary.p-4.cursor-pointer.bg-black.text-white.font-bold.uppercase #{summary} 
+    div.p-4.content !{description}
+
 block content 
-  div The about page
+  script(src="/scripts/about.js" type="module" defer) 
+  .flex.justify-center.p-6(class="sm:p-16")
+    div.list-disc.list-inside.relative.w-full(class="sm:max-w-xl")
+      each obj in information 
+        +infoCard(obj.q, obj.a)

@@ -1,0 +1,16 @@
+{
+    "information": [
+        {
+            "q": "Which tournaments are included in this data?",
+            "a": "According to Start.gg, there are about 130,000 completed singles Smash Ultimate events before April 2023 (when I began this project). Between rate limits from Start.gg's API and the database that the server stores match data in, it is infeasible to process a full backlog of tournaments.<br /><br /> Therefore, match data from any complete singles Smash Ultimate tournament satisfying one of the following conditions is included in the dataset: <ul class='font-bold text-sm list-disc list-inside'><li>Online tournaments completed before April 2023 with at least 100 entrants</li><li>Offline tournaments completed before April 2023 with at least 32 entrants</li><li>Online and offline tournaments completed during or after April 2023 of any size</li></ul>"
+        },
+        {
+            "q": "How often is the data updated?",
+            "a": "Match data from tournaments held in the past week are processed each Friday evening (PST). There shouldn't be any downtime while the dataset is being updated."
+        },
+        {
+            "q": "Why do the game counts across all stages add up to slightly less than the total game counts sometimes?",
+            "a": "There are a few games in the dataset played on experimental stages from early Ultimate tournaments, like Skyloft or Mario Circuit. These games are recorded and contribute to overall game counts, but are not displayed on a card on character or matchup pages. These statistics are negligible compared to the displayed stages."
+        }
+    ]
+}

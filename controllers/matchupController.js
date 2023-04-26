@@ -49,7 +49,9 @@ exports.matchup = async (req, res, next) => {
         (overallData.char1Wins + overallData.char2Wins)
     ) / 100 || 0
   const char2WinPct =
-    overallData.char1Wins + overallData.char2Wins > 0 ? 100 - char1WinPct : 0
+    overallData.char1Wins + overallData.char2Wins > 0
+      ? Math.round(100 * (100 - char1WinPct)) / 100
+      : 0
 
   let stageData
   try {
