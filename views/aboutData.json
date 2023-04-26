@@ -2,7 +2,7 @@
     "information": [
         {
             "q": "Which tournaments are included in this data?",
-            "a": "According to Start.gg, there are about 130,000 completed singles Smash Ultimate events before April 2023 (when I began this project). Between rate limits from Start.gg's API and the database that the server stores match data in, it is infeasible to process a full backlog of tournaments.<br /><br /> Therefore, match data from any complete singles Smash Ultimate tournament satisfying one of the following conditions is included in the dataset: <ul class='font-bold text-sm list-disc list-inside'><li>Online tournaments completed before April 2023 with at least 100 entrants</li><li>Offline tournaments completed before April 2023 with at least 32 entrants</li><li>Online and offline tournaments completed during or after April 2023 of any size</li></ul>"
+            "a": "According to start.gg, there are about 130,000 completed singles Smash Ultimate events before April 2023 (when I began this project). Due to rate limits between start.gg's API and this site's database, it is infeasible to process a full backlog of tournaments.<br /><br /> Instead, all data from the following tournaments has been collected:<ul class='font-bold text-sm list-disc list-inside'><li>Online tournaments completed before April 2023 with at least 100 entrants</li><li>Offline tournaments completed before April 2023 with at least 32 entrants</li><li>All tournaments completed during or after April 2023 (of any size, online or offline)</li></ul>"
         },
         {
             "q": "How often is the data updated?",
@@ -11,6 +11,20 @@
         {
             "q": "Why do the game counts across all stages add up to slightly less than the total game counts sometimes?",
             "a": "There are a few games in the dataset played on experimental stages from early Ultimate tournaments, like Skyloft or Mario Circuit. These games are recorded and contribute to overall game counts, but are not displayed on a card on character or matchup pages. These statistics are negligible compared to the displayed stages."
+        },
+        {
+            "q": "Who made this website?",
+            "a": "I'm Corncycle, an Ultimate player from Washington. I'm not very active on large social media sites anymore, but if you'd like to follow me, I have a <a class='underline' href='https://twitter.com/CorncycleBuh'>Twitter account</a> which I very rarely use, and a <a class='underline' href='https://cohost.org/corncycle/'>cohost account</a>, which I also almost never use.<br /><br />I am not associated with Nintendo or the Super Smash Bros. series. This page is not monetized."
+        }
+    ],
+    "technical": [
+        {
+            "q": "How was this site made?",
+            "a": "This site is hosted on <a class='underline' href='https://fly.io/'>fly.io</a> with an <a class='underline' href='https://expressjs.com/'>Express</a> server which uses a combination of <a class='underline' href='https://pugjs.org/api/getting-started.html'>Pug</a>, <a class='underline' href='https://react.dev/'>React</a>, and <a class='underline' href='https://tailwindcss.com/'>Tailwind</a> for the front-end.<br /><br />The back-end uses a <a class='underline' href='https://www.mongodb.com/atlas/database'>MongoDB database</a> with data gathered from <a class='underline' href='https://developer.start.gg/docs/intro/'>start.gg's GraphQL API</a>.<br /><br />The source code for the entire project is hosted on <a class='underline' href='https://github.com/Corncycle/ultimate-stage-data-server'>my Github</a>."
+        },
+        {
+            "q": "Assets used",
+            "a": "This page would not be possible without start.gg's immense dataset accessible through <a class='underline' href='https://developer.start.gg/docs/intro/''>their API</a>.<br /><br />Some stage images were taken from <a class='underline' href='https://rubendal.github.io/ssbu/#/Stage'>rubendal's Smash Ultimate Data Viewer</a>. Other high-quality images were taken from <a class='underline' href='https://www.reddit.com/r/smashbros/comments/f1iz5c/a_complete_hq_image_collection_of_all_smash/'>this album</a> posted by reddit user TV_Toshi.<br /><br />The animated accordions on this page are thanks to <a class='underline' href='https://css-tricks.com/how-to-animate-the-details-element-using-waapi/'>this post</a> by Louis Hoebregts.<br /><br />Fighter thumbnails were scraped from <a class='underline' href='https://www.smashbros.com/en_US/fighter/index.html'>smashbros.com</a>, and fighter icons were taken from <a class='underline' href='https://www.spriters-resource.com/nintendo_switch/supersmashbrosultimate/sheet/111395/'>spriters-resource.com</a>."
         }
     ]
 }

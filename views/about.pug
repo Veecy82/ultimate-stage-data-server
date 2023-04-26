@@ -1,13 +1,20 @@
 extends layout
 
+mixin sectionHeader(text)
+  h4.font-fjalla.uppercase.text-xl.font-bold.bg-black.text-white.px-4.py-2.pt-3.m-4.shadow-lg(class="sm:text-4xl") #{text}
+
 mixin infoCard(summary, description)
-  details.w-full.bg-zinc-200
+  details.w-full.bg-zinc-200.shadow-lg
     summary.p-4.cursor-pointer.bg-black.text-white.font-bold.uppercase #{summary} 
     div.p-4.content !{description}
 
 block content 
   script(src="/scripts/about.js" type="module" defer) 
-  .flex.justify-center.p-6(class="sm:p-16")
-    div.list-disc.list-inside.relative.w-full(class="sm:max-w-xl")
+  .flex.justify-center.p-6(class="sm:px-16")
+    div.list-disc.list-inside.relative.w-full.flex.flex-col.items-center(class="sm:max-w-xl")
+      +sectionHeader("General Information")
       each obj in information 
+        +infoCard(obj.q, obj.a)
+      +sectionHeader("Technical Information")
+      each obj in technicalInformation 
         +infoCard(obj.q, obj.a)
