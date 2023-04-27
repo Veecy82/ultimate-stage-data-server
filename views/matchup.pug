@@ -2,7 +2,7 @@ extends layout
 
 mixin card(stageBg, stageWinPct, stageWinGames, stageLosePct, stageLoseGames, allPct, stagePct)
   .relative.w-full.max-w-lg.m-4.shadow-lg(class="2xl:max-w-2xl")
-    div.w-full.aspect-video.bg-cover.bg-center.contrast-50.grayscale-25.opacity-60(style=`background-image: url('/images/stages/${stageBg}.png')`)
+    div.w-full.aspect-video.bg-cover.bg-center.contrast-50.grayscale-25.opacity-60(style=`background-image: url('/images/stages/${stageBg}.jpg')`)
     div.absolute.top-0.bottom-0.left-0.bg-red-700.opacity-50(style=`right: ${100-stagePct}%`)
     div.absolute.top-0.bottom-0.right-0.bg-blue-700.opacity-50(style=`left: ${(stageWinGames || stageLoseGames) ? stagePct : 100}%`)
     div.absolute.w-6.h-full.top-0.cursor-pointer.tooltip.indicator(data-tooltip=`${name1} win % over all stages: ${allPct}%` class="-translate-x-1/2 before:content-[attr(data-tooltip)] before:absolute before:opacity-0 before:bg-slate-900 before:rounded-md before:text-white before:px-2 before:py-1 before:whitespace-pre before:left-1/2 before:-top-2 before:-translate-x-1/2 before:-translate-y-full" style=`left: ${allPct}%`)
