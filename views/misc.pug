@@ -3,7 +3,7 @@ extends layout
 block content 
   .flex.justify-center.p-6(class="sm:px-16")
     div.list-disc.list-inside.relative.w-full.flex.flex-col.items-center.gap-2(class="sm:max-w-xl")
-      div.text-sm.font-bold.text-zinc-500 Dataset last updated #{timestamp.toLocaleTimeString()}, #{timestamp.toLocaleDateString()}
+      div.text-sm.font-bold.text-zinc-500 Dataset last updated #{timestamp.toLocaleTimeString('en-US', {hour: '2-digit', minute: '2-digit', timeZone: "America/Vancouver"})}, #{timestamp.toLocaleDateString('en-US', {timeZone: "America/Vancouver"})} PT
       div.w-full.flex.flex-row.font-fjalla.items-center.justify-center.gap-4
         div.text-6xl.font-bold #{totalGameCount.toLocaleString()}
         div.uppercase.text-center.text-2xl.max-h-20.overflow-hidden(class="sm:hidden") games of data
