@@ -70,6 +70,7 @@ exports.matchup = async (req, res, next) => {
   }
 
   res.render('matchup', {
+    title: `${char.toName[char1Id]} versus ${char.toName[char2Id]}`.toString(),
     route: 'matchup',
     name1: char.toName[char1Id],
     name2: char.toName[char2Id],

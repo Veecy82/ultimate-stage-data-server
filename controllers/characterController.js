@@ -48,6 +48,7 @@ exports.character = async (req, res, next) => {
   }
 
   res.render('character', {
+    title: `${char.toName[charId]}`.toString(),
     route: 'character',
     name: char.toName[charId],
     internal: char.toInternal[charId],
