@@ -7,6 +7,7 @@
 
 const ProcessedTournament = require('../../models/processedTournament')
 const Game = require('../../models/game')
+const char = require('./charIdTools')
 
 const util = require('./util')
 
@@ -367,4 +368,51 @@ exports.removeGamesWithEventSlug = async (slug) => {
   } catch (e) {
     console.log(`A problem occurred when trying to remove games from ${slug}`)
   }
+}
+
+exports.countUniqueEventSlugs = async () => {
+  const res = await Game.aggregate([
+    { $group: { _id: '$slug' } },
+    { $group: { _id: 1, count: { $sum: 1 } } },
+  ])
+  return res[0].count
+}
+
+exports.getAllCharacterDataOverall = async () => {
+  const ids = []
+  const promises = []
+  for (const id in char.toName) {
+    ids.push(id)
+    promises.push(this.getCharacterDataOverall(id))
+  }
+  const res = await Promise.all(promises)
+  for (let i = 0; i < res.length; i++) {
+    res[i].id = ids[i]
+    res[i].name = char.toName[ids[i]]
+  }
+  return res
+}
+
+exports.getLastNProcessedEventsWithDataSlugs = async (n) => {
+  const res = await Game.aggregate([
+    {
+      $group: {
+        _id: '$slug',
+        firstGame: { $first: '$_id' },
+      },
+    },
+    {
+      $sort: { firstGame: -1 },
+    },
+    {
+      $limit: n,
+    },
+  ])
+
+  const out = []
+  for (const obj of res) {
+    out.push(obj._id)
+  }
+
+  return out
 }

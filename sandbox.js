@@ -7,6 +7,7 @@ const apiTools = require('./database-scripts/utility/apiTools')
 const updateTools = require('./database-scripts/updateTools')
 const mongoTools = require('./database-scripts/utility/mongoTools')
 const util = require('./database-scripts/utility/util')
+const misc = require('./database-scripts/miscDataTools')
 
 const char = require('./database-scripts/utility/charIdTools')
 
@@ -20,12 +21,7 @@ mongoConnect().catch((err) => console.log(err))
 const Game = require('./models/game')
 
 async function main() {
-  console.log(await mongoTools.countRecordedGamesAcrossAllTournaments(true))
-
-  console.log(`Online games: ${await Game.countDocuments({ isOnline: true })}`)
-  console.log(
-    `Offline games: ${await Game.countDocuments({ isOnline: false })}`
-  )
+  console.log(await misc.createCurrentMiscDataObject())
 
   mongoose.disconnect()
 }

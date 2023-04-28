@@ -10,6 +10,7 @@ const indexRouter = require('./routes/index')
 const characterRouter = require('./routes/character')
 const matchupRouter = require('./routes/matchup')
 const aboutRouter = require('./routes/about')
+const miscRouter = require('./routes/misc')
 
 const app = express()
 
@@ -35,6 +36,7 @@ app.use('/', indexRouter)
 app.use('/character', characterRouter)
 app.use('/matchup', matchupRouter)
 app.use('/about', aboutRouter)
+app.use('/misc', miscRouter)
 
 // forward any requests unhandled by routers to error handler
 app.use(function (req, res, next) {

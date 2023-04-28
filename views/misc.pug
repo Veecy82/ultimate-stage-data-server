@@ -1,0 +1,16 @@
+extends layout
+
+block content 
+  .flex.justify-center.p-6(class="sm:px-16")
+    div.list-disc.list-inside.relative.w-full.flex.flex-col.items-center(class="sm:max-w-xl")
+      div Miscellaneous data 
+      div Last updated #{timestamp}
+      div Total games: #{totalGameCount.toLocaleString()}
+      div Online: #{totalOnlineGameCount.toLocaleString()}, Offline: #{totalOfflineGameCount.toLocaleString()},
+      div Number of event slugs processed: #{totalEventSlugsLightlyInspected.toLocaleString()}
+      div Number of event slugs with at least 1 game of stage data: #{totalEventSlugsWithData.toLocaleString()}
+      div Best Character by Overall Win %: #{bestWinCharName} -- #{bestWinCharPct}%
+      div Worst Character by Overall Win %: #{worstWinCharName} -- #{worstWinCharPct}%
+      div Character with Most Games: #{mostGamesCharName} -- #{mostGamesCharCount.toLocaleString()}
+      div Character with Least Games: #{leastGamesCharName} -- #{leastGamesCharCount.toLocaleString()}
+      div Last 10 processed events: #{lastTenProcessedSlugs}

@@ -123,3 +123,7 @@ exports.getArrayFromFile = async (pathToFile) => {
     throw e
   }
 }
+
+exports.round2 = (num) => {
+  return Math.round(num * 100) / 100
+}
