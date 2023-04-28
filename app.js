@@ -24,11 +24,13 @@ mongoConnect().catch((err) => console.log(err))
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'pug')
 
+// putting this before `logger` means requests for static assets are not logged
+// (so generally only requests for a route are logged)
+app.use(express.static(path.join(__dirname, 'public')))
+
 app.use(logger('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
-// app.use(cookieParser())
-app.use(express.static(path.join(__dirname, 'public')))
 
 app.use('/favicon.ico', express.static('images/favicon.ico'))
 

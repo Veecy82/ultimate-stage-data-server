@@ -8,8 +8,6 @@ exports.misc = async (req, res, next) => {
     const slugsOnly = data.lastTenProcessedSlugs
     const richSlugs = []
     for (const slug of slugsOnly) {
-      console.log('slug:')
-      console.log(slug)
       const obj = {}
       obj.url = 'https://start.gg/' + slug
       const pieces = slug.split('/')
@@ -21,8 +19,6 @@ exports.misc = async (req, res, next) => {
   } catch (e) {
     return next(e)
   }
-
-  console.log(data.timestamp.toLocaleTimeString())
 
   res.render('misc', { title: 'Miscellaneous Statistics', ...data })
 }
