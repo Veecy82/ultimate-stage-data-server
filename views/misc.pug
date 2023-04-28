@@ -2,15 +2,22 @@ extends layout
 
 block content 
   .flex.justify-center.p-6(class="sm:px-16")
-    div.list-disc.list-inside.relative.w-full.flex.flex-col.items-center(class="sm:max-w-xl")
-      div Miscellaneous data 
-      div Last updated #{timestamp}
-      div Total games: #{totalGameCount.toLocaleString()}
-      div Online: #{totalOnlineGameCount.toLocaleString()}, Offline: #{totalOfflineGameCount.toLocaleString()},
-      div Number of event slugs processed: #{totalEventSlugsLightlyInspected.toLocaleString()}
-      div Number of event slugs with at least 1 game of stage data: #{totalEventSlugsWithData.toLocaleString()}
-      div Best Character by Overall Win %: #{bestWinCharName} -- #{bestWinCharPct}%
-      div Worst Character by Overall Win %: #{worstWinCharName} -- #{worstWinCharPct}%
-      div Character with Most Games: #{mostGamesCharName} -- #{mostGamesCharCount.toLocaleString()}
-      div Character with Least Games: #{leastGamesCharName} -- #{leastGamesCharCount.toLocaleString()}
-      div Last 10 processed events: #{lastTenProcessedSlugs}
+    div.list-disc.list-inside.relative.w-full.flex.flex-col.items-center.gap-2(class="sm:max-w-xl")
+      div.text-sm.font-bold.text-zinc-500 Dataset last updated #{timestamp.toLocaleTimeString()}, #{timestamp.toLocaleDateString()}
+      div.w-full.flex.flex-row.font-fjalla.items-center.justify-center.gap-4
+        div.text-6xl.font-bold #{totalGameCount.toLocaleString()}
+        div.uppercase.text-center.text-2xl.max-h-20.overflow-hidden(class="sm:hidden") games of data
+        div.uppercase.text-center.text-xl.max-h-20.overflow-hidden.hidden(class="sm:block") games with stage and character data in Ultimate Stage Data's database 
+      div.uppercase.font-fjalla.text-zinc-500 (#{totalOnlineGameCount.toLocaleString()} online, #{totalOfflineGameCount.toLocaleString()} offline)
+      //-
+        div Number of event slugs processed: #{totalEventSlugsLightlyInspected.toLocaleString()}
+        div Number of event slugs with at least 1 game of stage data: #{totalEventSlugsWithData.toLocaleString()}
+        div Best Character by Overall Win %: #{bestWinCharName} -- #{bestWinCharPct}%
+        div Worst Character by Overall Win %: #{worstWinCharName} -- #{worstWinCharPct}%
+        div Character with Most Games: #{mostGamesCharName} -- #{mostGamesCharCount.toLocaleString()}
+        div Character with Least Games: #{leastGamesCharName} -- #{leastGamesCharCount.toLocaleString()}
+      div.text-center.font-fjalla.text-lg.mt-4 Most recently processed events with stage data:
+        ul.flex.flex-col.items-center.underline.text-sm.font-sans
+          each obj in richSlugs 
+            a(href=obj.url)
+              span #{obj.shortenedSlug}

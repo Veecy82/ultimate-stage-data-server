@@ -6,11 +6,12 @@
  */
 
 const mongoTools = require('./utility/mongoTools')
-const apiTools = require('./utility/apiTools')
 const util = require('./utility/util')
+
+const MiscData = require('../models/miscData')
 const ProcessedTournament = require('../models/processedTournament')
 
-exports.createCurrentMiscDataObject = async () => {
+exports.createCurrentMiscDataJsObject = async () => {
   const [
     totalGameCount,
     totalOnlineGameCount,
@@ -78,8 +79,31 @@ exports.createCurrentMiscDataObject = async () => {
   }
 }
 
-exports.saveMiscDataObjectToDatabase = async () => {}
+exports.saveMiscDataObjectToDatabase = async (miscDataObject) => {
+  try {
+    const miscData = new MiscData(miscDataObject)
+    await miscData.save()
+  } catch (err) {
+    console.log('Error saving new MiscData object')
+    throw err
+  }
+}
 
-exports.getCurrentMiscData = async () => {}
+exports.getCurrentMiscData = async () => {
+  if (this.currMiscData) {
+    return this.currMiscData
+  }
+  const query = await MiscData.findOne({}).sort({ timestamp: 1 })
+  const obj = query.toObject()
+  this.currMiscData = obj
+  return obj
+}
 
-exports.setCurrentMiscData = async () => {}
+exports.setCurrentMiscData = async (miscDataObject) => {
+  await this.saveMiscDataObjectToDatabase(miscDataObject)
+  await this.getCurrentMiscData()
+}
+
+exports.makeAndSetCurrentMiscData = async () => {
+  await this.setCurrentMiscData(await this.createCurrentMiscDataJsObject())
+}

@@ -1,12 +1,15 @@
-const mongoTools = require('../database-scripts/utility/mongoTools')
+const miscDataTools = require('../database-scripts/miscDataTools')
 
 exports.index = async (req, res, next) => {
-  let data
+  let miscData
   try {
-    data = await Promise.all([mongoTools.getTotalGames()])
+    miscData = await miscDataTools.getCurrentMiscData()
   } catch (e) {
     return next(e)
   }
 
-  res.render('index', { title: 'Ultimate Stage Data', numGames: data[0] })
+  res.render('index', {
+    title: 'Ultimate Stage Data',
+    numGames: miscData.totalGameCount,
+  })
 }

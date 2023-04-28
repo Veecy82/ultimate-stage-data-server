@@ -21,8 +21,6 @@ mongoConnect().catch((err) => console.log(err))
 const Game = require('./models/game')
 
 async function main() {
-  console.log(await misc.createCurrentMiscDataObject())
-
   mongoose.disconnect()
 }
 
