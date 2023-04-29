@@ -93,7 +93,7 @@ exports.getCurrentMiscData = async () => {
   if (this.currMiscData) {
     return this.currMiscData
   }
-  const query = await MiscData.findOne({}).sort({ timestamp: 1 })
+  const query = await MiscData.findOne({}).sort({ timestamp: -1 })
   const obj = query.toObject()
   this.currMiscData = obj
   return obj

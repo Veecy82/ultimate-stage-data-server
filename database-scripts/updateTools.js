@@ -2,7 +2,7 @@
  *
  * A library of functions for fetching new data from Start.gg and populating USD's database
  *
- * Functions may both query Start.gg's API and USD's database through Mongoose
+ * Functions may query both Start.gg's API and USD's database through Mongoose
  */
 const mongoTools = require('./utility/mongoTools')
 const apiTools = require('./utility/apiTools')
@@ -51,7 +51,13 @@ exports.processTournamentSlug = async (slug, onlyProcessIfOffline) => {
   console.log(`Tournament [${slug}] recorded in database as processed`)
 }
 
-exports.processTournamentsInLongPeriod = async (unixStart, unixEnd) => {}
+exports.processAllTournamentsInPastNDays = async (n) => {
+  const tournaments =
+    await apiTools.getCompletedEventSlugsWithEntrantsInPastNDays(n)
+  for (const [key, value] of tournaments) {
+    await this.processTournamentSlug(key)
+  }
+}
 
 exports.processTournamentsFromFileOfEventSize = async (
   pathToFile,

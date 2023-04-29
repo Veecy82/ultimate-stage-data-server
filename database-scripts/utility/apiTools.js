@@ -428,6 +428,30 @@ exports.getCompletedEventSlugsWithEntrantsInLongPeriod = async (
   return allSlugs
 }
 
+/** Asynchronously return a map of `slug, numEntrants` pairs of events from `n` days ago until now
+ *
+ * NOTE: This function uses `this.getCompletedEventSlugsWithEntrantsInSinglePeriod` internally, and thus will fail to process a period of time with over 10,000 events in it. It is recommended to use `this.getCompletedEventSlugsWithEntrantsInLongPeriod` with specific dates for periods longer than a month
+ *
+ * As implemented, tournaments may be up to 4 days before or 4 days after the given range as a measure to prevent missing tournaments that lie on the boundary of adjacent queries
+ *
+ * e.g. querying
+ *
+ * "June 3rd, 2019 to January 1st, 2020"
+ * and
+ * "January 1st, 2020 to April 9th, 2020"
+ *
+ * would miss a tournament that ran from December 29th, 2019 to January 6th, 2020 if it wasn't implemented this way
+ */
+exports.getCompletedEventSlugsWithEntrantsInPastNDays = async (n) => {
+  const dayInSeconds = 24 * 60 * 60
+  const now = util.currentTimeUnixSeconds()
+
+  return await this.getCompletedEventSlugsWithEntrantsInSinglePeriod(
+    now - (n + 4) * dayInSeconds,
+    now + 4 * dayInSeconds
+  )
+}
+
 /** Asynchronously return an array of game objects from an event for games that have stage and character data
  *
  * Event slug should be previously vetted with `eventSlugRepresentativeHasStageData` as a heuristic for sets to have reported data

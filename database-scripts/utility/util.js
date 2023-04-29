@@ -7,6 +7,10 @@ exports.ymdToUnixTimestamp = (year, month, day) => {
   return Math.floor(Date.UTC(year, month - 1, day, 0, 0, 0, 0) / 1000)
 }
 
+exports.currentTimeUnixSeconds = () => {
+  return Math.floor(Date.now() / 1000)
+}
+
 exports.usdDate = (year, month, day, humanReadable) => {
   if (humanReadable) {
     return (

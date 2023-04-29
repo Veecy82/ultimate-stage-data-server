@@ -22,8 +22,6 @@ exports.character = async (req, res, next) => {
     }
   }
 
-  console.log(options)
-
   let overallData
   try {
     overallData = await mongoTools.getCharacterDataOverall(charId, options)

@@ -11,6 +11,8 @@ const misc = require('./database-scripts/miscDataTools')
 
 const char = require('./database-scripts/utility/charIdTools')
 
+const weeklyUpdateTools = require('./database-scripts/weeklyUpdateTools')
+
 const mongoose = require('mongoose')
 
 async function mongoConnect() {
@@ -21,6 +23,8 @@ mongoConnect().catch((err) => console.log(err))
 const Game = require('./models/game')
 
 async function main() {
+  await weeklyUpdateTools.doWeeklyUpdate()
+
   mongoose.disconnect()
 }
 
