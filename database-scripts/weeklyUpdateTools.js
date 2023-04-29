@@ -15,7 +15,7 @@ const miscDataTools = require('./miscDataTools')
  * - Generate new MiscData object, save to database, and update the one cached on the server
  */
 exports.doWeeklyUpdate = async () => {
-  await updateTools.processAllTournamentsInPastNDays(28)
+  await updateTools.processAllTournamentsInPastNDays(14)
   await updateTools.removeGamesFromBlacklistedTournaments()
   await miscDataTools.makeAndSetCurrentMiscData()
 }
