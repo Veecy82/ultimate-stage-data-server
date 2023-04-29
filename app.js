@@ -1,5 +1,8 @@
 require('dotenv').config()
 
+const schedule = require('node-schedule')
+const weeklyUpdateTools = require('./database-scripts/weeklyUpdateTools')
+
 const createError = require('http-errors')
 const express = require('express')
 const path = require('path')
@@ -64,6 +67,10 @@ app.use(function (err, req, res, next) {
 
   res.status(err.status || 500)
   res.render('error', { title: 'Error' })
+})
+
+schedule.scheduleJob('0 0 21 * * 5', function () {
+  weeklyUpdateTools.doWeeklyUpdate()
 })
 
 module.exports = app

@@ -29,6 +29,7 @@
     "http-errors": "^2.0.0",
     "mongoose": "^7.0.3",
     "morgan": "^1.10.0",
+    "node-schedule": "^2.1.1",
     "postcss": "^8.4.22",
     "postcss-cli": "^10.1.0",
     "pug": "^3.0.2",
