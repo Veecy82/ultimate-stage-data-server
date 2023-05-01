@@ -2,7 +2,7 @@
     "information": [
         {
             "q": "Which tournaments are included in this data?",
-            "a": "According to start.gg, there are about 130,000 completed singles Smash Ultimate events before April 2023 (when I began this project). Due to rate limits between start.gg's API and this site's database, it is infeasible to process a full backlog of tournaments.<br /><br /> Instead, all data from the following tournaments has been collected:<ul class='font-bold text-sm list-disc list-inside'><li>Online tournaments completed before April 2023 with at least 100 entrants</li><li>Offline tournaments completed before April 2023 with at least 32 entrants</li><li>All tournaments completed during or after April 2023 (of any size, online or offline)</li></ul>"
+            "a": "All of the data for this site was obtained by querying <a class='underline' href='https://developer.start.gg/docs/intro/'>start.gg's API</a>, processing it, and storing it in a separate database.<br /><br /> According to start.gg, there are about 130,000 completed singles Smash Ultimate events before April 2023 (when I began this project). Due to rate limits between start.gg's API and this site's database, it is infeasible to process a full backlog of tournaments.<br /><br /> Instead, all data from the following tournaments has been collected:<ul class='font-bold text-sm list-disc list-inside'><li>Online tournaments completed before April 2023 with at least 100 entrants</li><li>Offline tournaments completed before April 2023 with at least 32 entrants</li><li>All tournaments completed during or after April 2023 (of any size, online or offline)</li></ul>"
         },
         {
             "q": "How often is the data updated?",
@@ -14,7 +14,7 @@
         },
         {
             "q": "Who made this website?",
-            "a": "I'm Corncycle, an Ultimate player from Washington. I'm not very active on large social media sites anymore, but if you'd like to follow me, I have a <a class='underline' href='https://twitter.com/CorncycleBuh'>Twitter account</a> which I very rarely use, and a <a class='underline' href='https://cohost.org/corncycle/'>cohost account</a>, which I also almost never use.<br /><br />I am not associated with Nintendo or the Super Smash Bros. series. This page is not monetized."
+            "a": "I'm Corncycle, an Ultimate player from Washington. I'm not very active on large social media sites anymore, but if you'd like to follow me, I have a <a class='underline' href='https://twitter.com/CorncycleBuh'>Twitter account</a> which I very rarely use, and a <a class='underline' href='https://cohost.org/corncycle/'>cohost account</a>, which I also almost never use.<br /><br />I am not associated with Nintendo or the Super Smash Bros series. This page is not monetized."
         }
     ],
     "technical": [

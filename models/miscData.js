@@ -16,7 +16,7 @@ const MiscDataSchema = new Schema({
   mostGamesCharName: { type: String },
   mostGamesCharCount: { type: Number },
   leastGamesCharName: { type: String },
-  leastGamesCharCount: { type: String },
+  leastGamesCharCount: { type: Number },
   lastTenProcessedSlugs: { type: [String] },
 })
 

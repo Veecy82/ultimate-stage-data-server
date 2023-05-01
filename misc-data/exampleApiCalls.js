@@ -1,8 +1,8 @@
 // The only reason I'm exporting these examples is so that my linter stops complaining to me
 //
-// These snippets are not meant to be run, and probably would fail to run due to the relative file paths
+// These snippets are not meant to be run from this file, and probably would fail to run due to the relative file paths
 //
-// They were initially run from `index.js`, so if you really want to run them you should paste them into there
+// These excerpts were initially run from `index.js`, so if you really want to run them you should paste the body of the desired example into the `main` function of `sandbox.js`
 
 const apiTools = require('../database-scripts/utility/apiTools')
 const updateTools = require('../database-scripts/updateTools')

@@ -1,4 +1,5 @@
 const miscDataTools = require('../database-scripts/miscDataTools')
+const char = require('../database-scripts/utility/charIdTools')
 
 exports.misc = async (req, res, next) => {
   let data
@@ -20,5 +21,14 @@ exports.misc = async (req, res, next) => {
     return next(e)
   }
 
-  res.render('misc', { title: 'Miscellaneous Statistics', ...data })
+  res.render('misc', {
+    title: 'Miscellaneous Statistics',
+    ...data,
+    bestWinCharInternal: char.toInternal[char.nameToId[data.bestWinCharName]],
+    worstWinCharInternal: char.toInternal[char.nameToId[data.worstWinCharName]],
+    mostGamesCharInternal:
+      char.toInternal[char.nameToId[data.mostGamesCharName]],
+    leastGamesCharInternal:
+      char.toInternal[char.nameToId[data.leastGamesCharName]],
+  })
 }
