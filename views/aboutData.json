@@ -15,6 +15,10 @@
         {
             "q": "Who made this website?",
             "a": "I'm Corncycle, an Ultimate player from Washington. I'm not very active on large social media sites anymore, but if you'd like to follow me, I have a <a class='underline' href='https://twitter.com/CorncycleBuh'>Twitter account</a> which I very rarely use, and a <a class='underline' href='https://cohost.org/corncycle/'>cohost account</a>, which I also almost never use.<br /><br />I am not associated with Nintendo or the Super Smash Bros series. This page is not monetized."
+        },
+        {
+            "q": "Other stage data analyses",
+            "a": "For a deep analysis of the stage statistics of pre-8.0.0 Smash Ultimate, check out <a class='underline' href='https://smashboards.com/threads/competitive-character-impressions-2-0.464762/page-424#post-24044822'>this smashboards post</a>!<br /><br />After finishing this project, I also learned about <a class='underline' href='https://ultimategamedata.com/'>ultimategamedata.com</a>, a website which has similar data to Ultimate Stage Data. With a more tabular presentation, ultimategamedata.com has about twice as many games recorded, but the dataset has not been updated since Kazuya's release in 2021."
         }
     ],
     "technical": [
