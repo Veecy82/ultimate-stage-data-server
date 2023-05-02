@@ -1,5 +1,7 @@
 # ultimate-stage-data-server
 
+![Preview of Ultimate Stage Data website](preview.gif)
+
 Live: https://ultimatestagedata.com
 
 A web application serving stage-dependent statistics of character and matchup win rates from Smash Ultimate tournaments.
