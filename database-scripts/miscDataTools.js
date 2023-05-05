@@ -89,19 +89,29 @@ exports.saveMiscDataObjectToDatabase = async (miscDataObject) => {
   }
 }
 
+/** Get the most recently updated MiscData object. If the server already has a MiscData object stored locally, this function will return that object and may be out of date, otherwise it will query Ultimate Stage Data's database for it
+ */
 exports.getCurrentMiscData = async () => {
   if (this.currMiscData) {
     return this.currMiscData
   }
+  console.log('Updating server-cached MiscData object...')
+  const obj = await this.getCurrentMiscDataFromServer()
+  this.currMiscData = obj
+  return obj
+}
+
+/** Get the most recently updated MiscData object by querying Ultimate Stage Data's database. If a cached result is acceptable, use `getCurrentMiscData` instead, but this function can be used in the case that the latest result is needed
+ */
+exports.getCurrentMiscDataFromServer = async () => {
   const query = await MiscData.findOne({}).sort({ timestamp: -1 })
   const obj = query.toObject()
-  this.currMiscData = obj
   return obj
 }
 
 exports.setCurrentMiscData = async (miscDataObject) => {
   await this.saveMiscDataObjectToDatabase(miscDataObject)
-  await this.getCurrentMiscData()
+  await this.getCurrentMiscDataFromServer()
 }
 
 exports.makeAndSetCurrentMiscData = async () => {

@@ -6,7 +6,7 @@
         },
         {
             "q": "How often is the data updated?",
-            "a": "Match data from tournaments held in the past week are processed each Friday evening (PST). There shouldn't be any downtime while the dataset is being updated."
+            "a": "Match data from tournaments held in the past week are processed each Friday afternoon (PST). There shouldn't be any downtime while the dataset is being updated."
         },
         {
             "q": "Why do the game counts across all stages add up to slightly less than the total game counts sometimes?",
