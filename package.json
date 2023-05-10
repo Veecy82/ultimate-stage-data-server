@@ -9,6 +9,7 @@
     "dev": "concurrently --kill-others \"nodemon server.js\" \"npm run tailwinddev\" \"npx webpack --watch\"",
     "serve": "node server.js",
     "sandbox": "node sandbox.js",
+    "sandboxdev": "node sandboxdev.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
