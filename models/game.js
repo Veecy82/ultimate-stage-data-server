@@ -5,8 +5,12 @@ const Schema = mongoose.Schema
 const GameSchema = new Schema({
   winChar: { type: Number, required: true },
   loseChar: { type: Number, required: true },
-  winPlayer: { type: Number, required: true },
-  losePlayer: { type: Number, required: true },
+  // winPlayer and losePlayer are the entrant IDs for the winning and losing entrant
+  // these are not useful, and instead we should use player IDs (below)
+  winPlayer: { type: Number },
+  losePlayer: { type: Number },
+  winPlayerId: { type: Number },
+  losePlayerId: { type: Number },
   stage: { type: String, required: true },
   isOnline: { type: Boolean },
   gameId: { type: Number, required: true, unique: true },

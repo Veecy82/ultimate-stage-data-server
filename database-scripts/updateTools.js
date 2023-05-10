@@ -93,3 +93,9 @@ exports.removeGamesFromBlacklistedTournaments = async () => {
   }
   console.log(`Deleted ${deletedCount} total games`)
 }
+
+exports.loadSampleDataset = async () => {
+  await this.processTournamentsFromFile(
+    './misc-data/event-entrant-pairs/eventSlugsSmall.json'
+  )
+}

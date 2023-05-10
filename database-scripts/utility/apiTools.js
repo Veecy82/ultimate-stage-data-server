@@ -14,6 +14,9 @@ const findValidTournamentsInPeriod = require('../queries/findValidTournamentsInP
 const getSetDataFromEvent = require('../queries/getSetDataFromEvent')
 const getOnlineStatusOfEventSlug = require('../queries/getOnlineStatusOfEventSlug')
 const getEventSlugsFromTournamentSlug = require('../queries/getEventSlugsFromTournamentSlug')
+const getPlayerInfoFromEntrantID = require('../queries/getPlayerInfoFromEntrantID')
+const getPlayerInfoFromPlayerID = require('../queries/getPlayerInfoFromPlayerID')
+const getPlayerInfoFromSetID = require('../queries/getPlayerInfoFromSetID')
 
 /** Given a Promise `prom`, return a Promise that resolves to the same value as `prom` after it resolves, or after n seconds, whichever is longer */
 exports.stallPromise = async (prom, n) => {
@@ -609,5 +612,78 @@ exports.prettyPrintStageDataFromVettedEvent = async (slug) => {
         char.toName[game.loseChar]
       } on ${game.stage}`
     )
+  }
+}
+
+/** Asynchronously return an object { entrantID, playerID, gamerTag } */
+exports.getPlayerInfoFromEntrantID = async (entrantID) => {
+  const delayBetweenQueries = 1.3
+
+  let response = await this.makeGraphQLRequestStubborn(
+    getPlayerInfoFromEntrantID.query,
+    { entrantID },
+    delayBetweenQueries
+  )
+
+  try {
+    const playerID = response.entrant.participants[0].player.id
+    const gamerTag = response.entrant.participants[0].player.gamerTag
+    return { entrantID, playerID, gamerTag }
+  } catch (e) {
+    console.log(
+      "Couldn't read attributes of getPlayerInfoFromEntrantID response for some reason"
+    )
+    throw e
+  }
+}
+
+/** Asynchronously return an object { playerID, gamerTag } */
+exports.getPlayerInfoFromPlayerID = async (playerID) => {
+  const delayBetweenQueries = 1.3
+
+  let response = await this.makeGraphQLRequestStubborn(
+    getPlayerInfoFromPlayerID.query,
+    { playerID },
+    delayBetweenQueries
+  )
+
+  try {
+    const gamerTag = response.player.gamerTag
+    return { entrantID, playerID, gamerTag }
+  } catch (e) {
+    console.log(
+      "Couldn't read attributes of getPlayerInfoFromPlayerID response for some reason"
+    )
+    throw e
+  }
+}
+
+/** Asynchronously return a length 2 array containing objects { entrantID, playerID, gamerTag } for a given set */
+exports.getPlayerInfoFromSetID = async (setID) => {
+  const delayBetweenQueries = 1.3
+
+  let response = await this.makeGraphQLRequestStubborn(
+    getPlayerInfoFromSetID.query,
+    { setID },
+    delayBetweenQueries
+  )
+
+  try {
+    const out = []
+    for (let i = 0; i < 2; i++) {
+      const entrantID = response.set.slots[i].entrant.id
+      const playerID = response.set.slots[i].entrant.participants[0].player.id
+      const gamerTag =
+        response.set.slots[i].entrant.participants[0].player.gamerTag
+
+      out.push({ entrantID, playerID, gamerTag })
+    }
+
+    return out
+  } catch (e) {
+    console.log(
+      "Couldn't read attributes of getPlayerInfoFromSetID response for some reason"
+    )
+    throw e
   }
 }

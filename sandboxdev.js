@@ -8,6 +8,7 @@ const updateTools = require('./database-scripts/updateTools')
 const mongoTools = require('./database-scripts/utility/mongoTools')
 const util = require('./database-scripts/utility/util')
 const misc = require('./database-scripts/miscDataTools')
+const backfill = require('./database-scripts/playerIDBackfillTools')
 
 const char = require('./database-scripts/utility/charIdTools')
 
@@ -23,10 +24,16 @@ mongoConnect().catch((err) => console.log(err))
 const Game = require('./models/game')
 
 async function main() {
-  await updateTools.processTournamentSlug(
-    'tournament/fight-for-them/event/ultimate-singles'
-  )
+  //await updateTools.loadSampleDataset()
 
+  await backfill.updateExistingGamesWithPlayerIDs()
+
+  console.log(
+    `Documents without playerIDs: ${await backfill.countDocumentsWithoutPlayerIDs()}`
+  )
+  console.log(
+    `Documents with playerIDs   : ${await backfill.countDocumentsWithPlayerIDs()}`
+  )
   mongoose.disconnect()
 }
 
