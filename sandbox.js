@@ -12,6 +12,7 @@ const misc = require('./database-scripts/miscDataTools')
 const char = require('./database-scripts/utility/charIdTools')
 
 const weeklyUpdateTools = require('./database-scripts/weeklyUpdateTools')
+const backfill = require('./database-scripts/playerIDBackfillTools')
 
 const mongoose = require('mongoose')
 

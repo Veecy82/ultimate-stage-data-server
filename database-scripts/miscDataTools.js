@@ -111,7 +111,7 @@ exports.getCurrentMiscDataFromServer = async () => {
 
 exports.setCurrentMiscData = async (miscDataObject) => {
   await this.saveMiscDataObjectToDatabase(miscDataObject)
-  await this.getCurrentMiscDataFromServer()
+  this.currMiscData = await this.getCurrentMiscDataFromServer()
 }
 
 exports.makeAndSetCurrentMiscData = async () => {
