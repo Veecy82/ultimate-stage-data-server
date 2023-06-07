@@ -22,3 +22,17 @@ To run code snippets testing various utility scripts (like those in `/misc-data/
 ```
 npm run sandbox
 ```
+
+# Updating and restarting a fly.io server running this application
+
+This section is mostly a reminder for myself. This repository does not include guidance for deploying to fly, and these commands will only work if you deploy to fly with a project name identical to the one I chose.
+
+To deploy a new version of the server, run
+```
+flyctl deploy
+```
+
+To restart a live server, run
+```
+flyctl apps restart ultimate-stage-data
+```
