@@ -1,5 +1,5 @@
 // sandboxdev.js
-// The purpose of this file is to manually test or run functions like those in apiTools, updateTools, or mongoTools on the testing non-production database
+// The purpose of this file is to manually test or run functions like those in apiTools, updateTools, or mongoTools on the alternate production database
 
 require('dotenv').config()
 
@@ -17,7 +17,7 @@ const weeklyUpdateTools = require('./database-scripts/weeklyUpdateTools')
 const mongoose = require('mongoose')
 
 async function mongoConnect() {
-  await mongoose.connect(process.env.MONGODB_DEV_CONNECTION_STRING)
+  await mongoose.connect(process.env.MONGODB_ALTERNATE_CONNECTION_STRING)
 }
 mongoConnect().catch((err) => console.log(err))
 
