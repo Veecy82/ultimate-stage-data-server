@@ -1,5 +1,5 @@
 // sandbox.js
-// The purpose of this file is to manually test or run functions like those in apiTools, updateTools, or mongoTools
+// The purpose of this file is to manually test or run functions like those in apiTools, updateTools, or mongoTools on the production database
 
 require('dotenv').config()
 
@@ -24,7 +24,11 @@ mongoConnect().catch((err) => console.log(err))
 const Game = require('./models/game')
 
 async function main() {
-  await weeklyUpdateTools.doWeeklyUpdate()
+  console.log(
+    await apiTools.getGamesFromVettedEvent(
+      'tournament/hex-smash-edition-v8/event/ultimate-singles'
+    )
+  )
 
   mongoose.disconnect()
 }

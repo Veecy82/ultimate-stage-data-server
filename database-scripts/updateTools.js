@@ -40,7 +40,18 @@ exports.processTournamentSlug = async (slug, onlyProcessIfOffline) => {
 
   console.log(`Saving games from [${slug}] to database...`)
   for (const game of games) {
-    const saved = await mongoTools.checkAndSaveGameToDatabase(game)
+    const formattedGame = {
+      winChar: game.winChar,
+      loseChar: game.loseChar,
+      winPlayerId: game.winPlayerId,
+      losePlayerId: game.losePlayerId,
+      stage: game.stage,
+      isOnline: game.isOnline,
+      gameId: game.gameId,
+      setId: game.setId,
+      slug: game.slug,
+    }
+    const saved = await mongoTools.checkAndSaveGameToDatabase(formattedGame)
     if (!saved) {
       console.log(
         `Warning: Game with gameId ${game.gameId} already in database (did not overwrite)`

@@ -10,3 +10,7 @@ completed, 50 entrants of stage data: tournament/ib-server-weekly-46-eu-only/eve
 completed, 28 entrants with 3 games of stage data: tournament/hex-smash-edition-v8/event/ultimate-singles
 
 listed as "California, USA" (but it's clearly online), check if start.gg classifies it as online or offline: tournament/great-idea-not-part-2/details
+
+two events that had MKBigBoss winning in grands with stage data (for use comparing entrant vs player ids):
+    tournament/hex-smash-edition-v8/event/ultimate-singles
+    tournament/late-night-show-with-redtrainer-2/event/ultimate-1v1-winners-takes-20-home

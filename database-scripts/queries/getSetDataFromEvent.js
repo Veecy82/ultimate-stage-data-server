@@ -16,6 +16,11 @@ exports.query =
           selections {
             entrant {
               id
+              participants {
+                player {
+                  id
+                }
+              }
             }
             selectionValue
           }

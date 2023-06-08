@@ -461,7 +461,7 @@ exports.getCompletedEventSlugsWithEntrantsInPastNDays = async (n) => {
  */
 exports.getGamesFromVettedEvent = async (slug) => {
   const games = []
-  const setsPerPage = 30
+  const setsPerPage = 28
   const delayBetweenQueries = 1.3
 
   let foundStageDataOnCurrentPage = false
@@ -483,9 +483,15 @@ exports.getGamesFromVettedEvent = async (slug) => {
                 game.selections.length === 2 &&
                 game.selections[0].entrant &&
                 game.selections[0].entrant.id &&
+                game.selections[0].entrant.participants &&
+                game.selections[0].entrant.participants[0].player &&
+                game.selections[0].entrant.participants[0].player.id &&
                 game.selections[0].selectionValue &&
                 game.selections[1].entrant &&
                 game.selections[1].entrant.id &&
+                game.selections[1].entrant.participants &&
+                game.selections[1].entrant.participants[0].player &&
+                game.selections[1].entrant.participants[0].player.id &&
                 game.selections[1].selectionValue
               ) {
                 foundStageDataOnCurrentPage = true
@@ -497,17 +503,25 @@ exports.getGamesFromVettedEvent = async (slug) => {
                 const loseChar = entrant0Won
                   ? game.selections[1].selectionValue
                   : game.selections[0].selectionValue
-                const winPlayer = entrant0Won
+                const winEntrantId = entrant0Won
                   ? game.selections[0].entrant.id
                   : game.selections[1].entrant.id
-                const losePlayer = entrant0Won
+                const loseEntrantId = entrant0Won
                   ? game.selections[1].entrant.id
                   : game.selections[0].entrant.id
+                const winPlayerId = entrant0Won
+                  ? game.selections[0].entrant.participants[0].player.id
+                  : game.selections[1].entrant.participants[0].player.id
+                const losePlayerId = entrant0Won
+                  ? game.selections[1].entrant.participants[0].player.id
+                  : game.selections[0].entrant.participants[0].player.id
                 games.push({
                   winChar,
                   loseChar,
-                  winPlayer,
-                  losePlayer,
+                  winEntrantId,
+                  loseEntrantId,
+                  winPlayerId,
+                  losePlayerId,
                   stage: game.stage.name,
                   isOnline: res.event.isOnline,
                   gameId: game.id,

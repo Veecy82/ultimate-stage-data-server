@@ -24,16 +24,16 @@ mongoConnect().catch((err) => console.log(err))
 const Game = require('./models/game')
 
 async function main() {
-  //await updateTools.loadSampleDataset()
-
-  await backfill.updateExistingGamesWithPlayerIDs()
-
   console.log(
-    `Documents without playerIDs: ${await backfill.countDocumentsWithoutPlayerIDs()}`
+    await updateTools.processTournamentSlug(
+      'tournament/hex-smash-edition-v8/event/ultimate-singles'
+    )
   )
-  console.log(
-    `Documents with playerIDs   : ${await backfill.countDocumentsWithPlayerIDs()}`
-  )
+  /*console.log(
+    await apiTools.getGamesFromVettedEvent(
+      'tournament/hex-smash-edition-v8/event/ultimate-singles'
+    )
+  )*/
   mongoose.disconnect()
 }
 
