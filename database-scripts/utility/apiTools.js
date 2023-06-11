@@ -468,10 +468,20 @@ exports.getGamesFromVettedEvent = async (slug) => {
 
   const handleResponse = (res) => {
     try {
-      // for tournaments with over 10,000 sets of stage data, res.event.sets will be `null` due to the start.gg API complexity limit
+      // for tournaments with over 10,000 sets of stage data, res.event will be `null` due to the start.gg API complexity limit (the response only contains an `errors array` and an `actionRecords` array)
       // in this case, there is no data to process, so just leave foundStageDataOnCurrentPage as false
       // this should occur for very few tournaments. as far as I am aware, there are only 2-5 tournaments where this occurs, and still the top 10,000 sets of stage data are recorded by this script
-      if (res.event.sets) {
+      if (res.errors) {
+        if (
+          res.errors[0].message === 'Cannot query more than the 10,000th entry'
+        ) {
+          console.log(
+            `Reached 10,000 sets from event [${slug}], recording sets...`
+          )
+        } else {
+          throw new Error(`Unhandled error message: ${res.errors[0].message}`)
+        }
+      } else if (res.event.sets) {
         for (const set of res.event.sets.nodes) {
           if (set.games) {
             for (const game of set.games) {
@@ -484,12 +494,15 @@ exports.getGamesFromVettedEvent = async (slug) => {
                 game.selections[0].entrant &&
                 game.selections[0].entrant.id &&
                 game.selections[0].entrant.participants &&
+                game.selections[0].entrant.participants.length > 0 && // in rare circumstances (see tournament/rushdown-online-6-smash-bros-and-fighting-game-tournament/events/smash-bros-ultimate-1v1) a game can have entrant data with an empty participants list (why?)
+                // this is so rare that we can safely discard it
                 game.selections[0].entrant.participants[0].player &&
                 game.selections[0].entrant.participants[0].player.id &&
                 game.selections[0].selectionValue &&
                 game.selections[1].entrant &&
                 game.selections[1].entrant.id &&
                 game.selections[1].entrant.participants &&
+                game.selections[1].entrant.participants.length > 0 &&
                 game.selections[1].entrant.participants[0].player &&
                 game.selections[1].entrant.participants[0].player.id &&
                 game.selections[1].selectionValue

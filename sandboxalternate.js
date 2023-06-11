@@ -24,9 +24,11 @@ mongoConnect().catch((err) => console.log(err))
 const Game = require('./models/game')
 
 async function main() {
-  await updateTools.processTournamentSlug(
-    'tournament/late-night-show-with-redtrainer-2/event/ultimate-1v1-winners-takes-20-home'
-  )
+  for (let year = 2020; year < 2024; year++) {
+    await updateTools.processTournamentsFromFile(
+      `./misc-data/event-entrant-pairs/${year}.json`
+    )
+  }
 
   mongoose.disconnect()
 }
