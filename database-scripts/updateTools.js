@@ -85,7 +85,7 @@ exports.processTournamentsFromFileOfEventSize = async (
     console.log(
       `Checking tournament... (${i++} of ${filteredTournaments.size})`
     )
-    if (value >= minEntrants) {
+    if (value >= minEntrants && i > 16000) {
       await this.processTournamentSlug(key, onlyProcessIfOffline)
     }
   }
