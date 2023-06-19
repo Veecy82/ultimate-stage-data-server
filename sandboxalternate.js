@@ -24,7 +24,7 @@ mongoConnect().catch((err) => console.log(err))
 const Game = require('./models/game')
 
 async function main() {
-  for (let year = 2020; year < 2024; year++) {
+  for (let year = 2022; year < 2024; year++) {
     await updateTools.processTournamentsFromFile(
       `./misc-data/event-entrant-pairs/${year}.json`
     )

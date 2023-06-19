@@ -461,7 +461,7 @@ exports.getCompletedEventSlugsWithEntrantsInPastNDays = async (n) => {
  */
 exports.getGamesFromVettedEvent = async (slug) => {
   const games = []
-  const setsPerPage = 25
+  const setsPerPage = 22
   const delayBetweenQueries = 1.3
 
   let foundStageDataOnCurrentPage = false
