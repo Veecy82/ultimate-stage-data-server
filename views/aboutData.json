@@ -2,11 +2,11 @@
     "information": [
         {
             "q": "Which tournaments are included in this data?",
-            "a": "All of the data for this site was obtained by querying <a class='underline' href='https://developer.start.gg/docs/intro/'>start.gg's API</a>, processing it, and storing it in a separate database.<br /><br /> According to start.gg, there are about 130,000 completed singles Smash Ultimate events before April 2023 (when I began this project). Due to rate limits between start.gg's API and this site's database, it is infeasible to process a full backlog of tournaments.<br /><br /> Instead, all data from the following tournaments has been collected:<ul class='font-bold text-sm list-disc list-inside'><li>Online tournaments completed before April 2023 with at least 100 entrants</li><li>Offline tournaments completed before April 2023 with at least 32 entrants</li><li>All tournaments completed during or after April 2023 (of any size, online or offline)</li></ul>"
+            "a": "All of the data for this site was obtained by querying <a class='underline' href='https://developer.start.gg/docs/intro/'>start.gg's API</a>, processing it, and storing it in a separate database.<br /><br /> For obvious reasons, data can only be used from tournament sets that report both character and stage data in at least one game. Due to API rate limits, the server has to use a heuristic to assess whether it should try to process a given event.<br /><br />Therefore, if the grand finals* set of an event has stage and character data, all games from the rest of the tournament are processed and recorded if they contain stage data. Otherwise, it is assumed no sets in the tournament have stage data and none are processed.<br /><br />All tournaments since the launch of Ultimate have been processed at this time.<br /><br /><span style='font-size: 0.8em'>* Some event formats (like round robin) are processed even though they don't contain a grand finals set. To be precise, ultimatestagedata.com processes an event if and only if the first set of the event, when ordered by start.gg's <code>MAGIC</code> sort, contains stage and character data. This corresponds to grand finals in most cases.</span>"
         },
         {
             "q": "How often is the data updated?",
-            "a": "Match data from tournaments held in the past week are processed each Friday afternoon (PST). There shouldn't be any downtime while the dataset is being updated."
+            "a": "Match data from tournaments held in the past week are processed each Friday afternoon (in Pacific time). There shouldn't be any downtime while the dataset is being updated."
         },
         {
             "q": "Why do the game counts across all stages add up to slightly less than the total game counts sometimes?",
@@ -18,7 +18,7 @@
         },
         {
             "q": "Other stage data analyses",
-            "a": "For a deep analysis of the stage statistics of pre-8.0.0 Smash Ultimate, check out <a class='underline' href='https://smashboards.com/threads/competitive-character-impressions-2-0.464762/page-424#post-24044822'>this smashboards post</a>!<br /><br />After finishing this project, I also learned about <a class='underline' href='https://ultimategamedata.com/'>ultimategamedata.com</a>, a website which has similar data to Ultimate Stage Data. With a tabular presentation, ultimategamedata.com has about twice as many matches recorded, but the dataset has not been updated since Kazuya's release in 2021."
+            "a": "For a deep analysis of the stage statistics of pre-8.0.0 Smash Ultimate, check out <a class='underline' href='https://smashboards.com/threads/competitive-character-impressions-2-0.464762/page-424#post-24044822'>this smashboards post</a>!<br /><br />After finishing this project, I also learned about <a class='underline' href='https://ultimategamedata.com/'>ultimategamedata.com</a>, a website which has similar data to Ultimate Stage Data. This site gives a more quantitative, tabular layout, but the dataset has not been updated since Kazuya's release in 2021."
         }
     ],
     "technical": [
