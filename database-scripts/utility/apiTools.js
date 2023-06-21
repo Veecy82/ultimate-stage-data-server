@@ -129,7 +129,7 @@ exports.makeGraphQLRequestStubborn = async (
   return await this.makeGraphQLRequestUpToNTimes(
     query,
     variables,
-    5,
+    10,
     delayBetweenQueries,
     logMessage
   )
